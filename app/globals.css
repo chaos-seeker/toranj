@@ -1,59 +1,70 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-input {
-  outline: none;
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
+@theme {
+  --color-gray: #f8f9fa;
+  --color-teal: #20c997;
+  --color-red-500: #ef4444;
+  --font-size-smp: 15px;
+  --font-size-xsp: 13px;
 }
 
-::-webkit-file-upload-button {
-  display: none;
-}
-
-body {
-  @apply bg-gray text-[#4C4C4C];
-}
-
-.show {
-  @apply opacity-100 visible;
-}
-.hide {
-  @apply opacity-0 invisible;
-}
-
-.custom-scrollbar {
-  &::-webkit-scrollbar {
-    @apply size-2;
-  }
-  &::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    @apply bg-[#acacac] rounded-[10px];
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    @apply bg-[#a1a1a1];
-  }
-}
-
-form {
-  div > div {
-    @apply col-span-1 flex flex-col gap-1;
-    label {
-      @apply text-smp text-teal;
+@layer base {
+  input {
+    outline: none;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
     }
-    input, textarea {
-      @apply w-full outline-none rounded-lg text-smp border bg-gray p-2.5 transition-all focus:border-teal/50;
+  }
+
+  ::-webkit-file-upload-button {
+    display: none;
+  }
+
+  body {
+    @apply bg-gray text-[#4C4C4C];
+  }
+}
+
+@layer components {
+  .show {
+    @apply opacity-100 visible;
+  }
+  
+  .hide {
+    @apply opacity-0 invisible;
+  }
+
+  .custom-scrollbar {
+    &::-webkit-scrollbar {
+      @apply size-2;
     }
-    textarea {
-      @apply max-h-24 min-h-24;
+    &::-webkit-scrollbar-track {
+      @apply bg-transparent;
     }
-    p {
-      @apply p-1 text-xsp text-red-500;
+    &::-webkit-scrollbar-thumb {
+      @apply bg-[#acacac] rounded-[10px];
     }
-  }    
+    &::-webkit-scrollbar-thumb:hover {
+      @apply bg-[#a1a1a1];
+    }
+  }
+
+  form {
+    div > div {
+      @apply col-span-1 flex flex-col gap-1;
+      label {
+        @apply text-smp text-teal;
+      }
+      input, textarea {
+        @apply w-full outline-none rounded-lg text-smp border bg-gray p-2.5 transition-all focus:border-teal/50;
+      }
+      textarea {
+        @apply max-h-24 min-h-24;
+      }
+      p {
+        @apply p-1 text-xsp text-red-500;
+      }
+    }    
+  }
 }
