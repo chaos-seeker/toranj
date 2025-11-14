@@ -74,9 +74,10 @@ export function PlaceOrder() {
             });
           }
         }}
-        className="mt-4 w-full rounded-lg bg-teal py-3 text-center text-white"
+        disabled={sendCartItemsMutation.isPending}
+        className="mt-4 w-full rounded-lg bg-teal py-3 text-center text-white disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        ثبت سفارش
+        {sendCartItemsMutation.isPending ? 'در حال ثبت سفارش...' : 'ثبت سفارش'}
       </button>
     </section>
   );

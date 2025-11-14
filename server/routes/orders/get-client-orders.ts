@@ -1,14 +1,6 @@
 import { protectedProcedure } from '@/server/trpc';
 
 export const getClientOrders = protectedProcedure.query(async ({ ctx }) => {
-  if (!ctx.userId) {
-    return {
-      message: 'دسترسی غیرمجاز',
-      status: 'fail' as const,
-      data: null,
-    };
-  }
-
   const orders = await ctx.prisma.order.findMany({
     where: {
       userId: ctx.userId,
@@ -18,7 +10,7 @@ export const getClientOrders = protectedProcedure.query(async ({ ctx }) => {
         select: {
           id: true,
           fullName: true,
-          phone: true,
+          phoneNumber: true,
           address: true,
         },
       },
@@ -83,7 +75,7 @@ export const getClientOrders = protectedProcedure.query(async ({ ctx }) => {
       user: {
         id: order.user.id,
         fullName: order.user.fullName,
-        phoneNumber: order.user.phone,
+        phoneNumber: order.user.phoneNumber,
         address: order.user.address,
       },
       createdAt: order.createdAt,

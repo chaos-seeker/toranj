@@ -5,7 +5,7 @@ export const getUsers = adminProcedure.query(async ({ ctx }) => {
     select: {
       id: true,
       fullName: true,
-      phone: true,
+      phoneNumber: true,
       address: true,
       createdAt: true,
     },
@@ -17,7 +17,7 @@ export const getUsers = adminProcedure.query(async ({ ctx }) => {
   return users.map((user: any) => ({
     id: user.id,
     fullName: user.fullName,
-    phoneNumber: user.phone,
+    phoneNumber: user.phoneNumber,
     address: user.address,
     createdAt: user.createdAt,
   }));

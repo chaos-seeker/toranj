@@ -10,37 +10,13 @@ export const updateAuth = protectedProcedure
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    if (!ctx.userId) {
-      return {
-        message: 'دسترسی غیرمجاز',
-        status: 'fail' as const,
-      };
-    }
-
     const updateData: {
       fullName?: string;
-      phone?: string;
       address?: string;
     } = {};
 
     if (input.fullName) updateData.fullName = input.fullName;
-    if (input.phoneNumber) updateData.phone = input.phoneNumber;
     if (input.address) updateData.address = input.address;
-
-    if (input.phoneNumber) {
-      const existingUser = await ctx.prisma.user.findFirst({
-        where: {
-          AND: [{ id: { not: ctx.userId } }, { phone: input.phoneNumber }],
-        },
-      });
-
-      if (existingUser) {
-        return {
-          message: 'شماره تلفن قبلاً استفاده شده است',
-          status: 'fail' as const,
-        };
-      }
-    }
 
     const user = await ctx.prisma.user.update({
       where: { id: ctx.userId },
@@ -48,7 +24,7 @@ export const updateAuth = protectedProcedure
       select: {
         id: true,
         fullName: true,
-        phone: true,
+        phoneNumber: true,
         address: true,
       },
     });
@@ -59,7 +35,7 @@ export const updateAuth = protectedProcedure
       user: {
         id: user.id,
         fullName: user.fullName,
-        phoneNumber: user.phone,
+        phoneNumber: user.phoneNumber,
         address: user.address,
       },
     };

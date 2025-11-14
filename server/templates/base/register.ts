@@ -29,7 +29,7 @@ export const register = publicProcedure
   .mutation(async ({ input, ctx }) => {
     const existingUser = await ctx.prisma.user.findFirst({
       where: {
-        phone: input.phoneNumber,
+        phoneNumber: input.phoneNumber,
       },
     });
 
@@ -45,14 +45,14 @@ export const register = publicProcedure
     const user = await ctx.prisma.user.create({
       data: {
         fullName: input.fullName,
-        phone: input.phoneNumber,
+        phoneNumber: input.phoneNumber,
         password: hashedPassword,
         address: input.address,
       },
       select: {
         id: true,
         fullName: true,
-        phone: true,
+        phoneNumber: true,
         address: true,
       },
     });
@@ -69,7 +69,7 @@ export const register = publicProcedure
       user: {
         id: user.id,
         fullName: user.fullName,
-        phoneNumber: user.phone,
+        phoneNumber: user.phoneNumber,
         address: user.address,
       },
     };

@@ -15,14 +15,14 @@ export function List() {
     return <Loader />;
   }
 
-  if (fetchClientOrders.data?.length !== 0) {
-    return <Empty text="سفارشی برای نمایش وجود ندارد!" />;
+  if (fetchClientOrders.data?.length === 0 || !fetchClientOrders.data) {
+    return <Empty text="سفارشی وجود ندارد" />;
   }
 
   return (
     <section className="size-full">
-      <div className="w-full min-w-max table-auto text-right text-sm [&_td]:px-4 [&_td]:py-1 [&_th]:border-b [&_th]:border-gray-200 [&_th]:p-4 [&_th_p]:block [&_th_p]:text-sm [&_th_p]:font-medium [&_th_p]:leading-none [&_th_p]:antialiased">
-        <table className="w-full min-w-max table-auto text-right text-sm">
+      <div className="relative flex size-full h-fit flex-col overflow-auto rounded-xl border border-teal/20 bg-white bg-clip-border text-gray-600">
+        <table className="w-full min-w-max table-auto text-right text-sm [&_td]:px-4 [&_td]:py-1 [&_th]:border-b [&_th]:border-gray-200 [&_th]:p-4 [&_th_p]:block [&_th_p]:text-sm [&_th_p]:font-medium [&_th_p]:leading-none [&_th_p]:antialiased">
           <thead className="bg-gray-200">
             <tr>
               <th>

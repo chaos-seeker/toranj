@@ -123,9 +123,10 @@ export function ModalRegister() {
           {/* submit */}
           <button
             type="submit"
-            className="rounded-lg bg-teal p-4 text-white transition-all"
+            disabled={registerMutation.isPending}
+            className="rounded-lg bg-teal p-4 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            ثبت نام
+            {registerMutation.isPending ? 'در حال ثبت نام...' : 'ثبت نام'}
           </button>
         </form>
       </div>

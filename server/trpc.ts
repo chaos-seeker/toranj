@@ -1,4 +1,4 @@
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
@@ -35,12 +35,9 @@ const getUserFromToken = async (): Promise<{
 export const protectedProcedure = t.procedure.use(async (opts) => {
   const user = await getUserFromToken();
   if (!user) {
-    return opts.next({
-      ctx: {
-        ...opts.ctx,
-        userId: undefined,
-        userRole: undefined,
-      },
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید',
     });
   }
   return opts.next({
@@ -55,12 +52,9 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
 export const adminProcedure = t.procedure.use(async (opts) => {
   const user = await getUserFromToken();
   if (!user) {
-    return opts.next({
-      ctx: {
-        ...opts.ctx,
-        userId: undefined,
-        userRole: undefined,
-      },
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید',
     });
   }
   // Since we don't have role anymore, adminProcedure is same as protectedProcedure

@@ -99,9 +99,10 @@ export function ModalLogin() {
           {/* submit */}
           <button
             type="submit"
-            className="rounded-lg bg-teal p-4 text-white transition-all"
+            disabled={loginMutation.isPending}
+            className="rounded-lg bg-teal p-4 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            ورود
+            {loginMutation.isPending ? 'در حال ورود...' : 'ورود'}
           </button>
         </form>
       </div>

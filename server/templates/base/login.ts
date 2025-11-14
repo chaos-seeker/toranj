@@ -26,7 +26,7 @@ export const login = publicProcedure
   )
   .mutation(async ({ input, ctx }) => {
     const user = await ctx.prisma.user.findUnique({
-      where: { phone: input.phone },
+      where: { phoneNumber: input.phone },
     });
 
     if (!user) {
@@ -57,7 +57,7 @@ export const login = publicProcedure
       user: {
         id: user.id,
         fullName: user.fullName,
-        phoneNumber: user.phone,
+        phoneNumber: user.phoneNumber,
         address: user.address,
       },
     };

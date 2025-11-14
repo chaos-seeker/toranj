@@ -91,16 +91,6 @@ const Desktop = (props: IDesktopProps) => {
           ))}
         </ul>
       </nav>
-      {/* logout btn */}
-      <button
-        onClick={handleLogout}
-        className="absolute bottom-5 left-1/2 -translate-x-1/2"
-      >
-        <div className="relative flex items-center gap-2 rounded-lg border border-yellow px-3 py-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal">
-          <LuLogOut size={25} />
-          <p className="whitespace-nowrap text-smp">خروج</p>
-        </div>
-      </button>
     </div>
   );
 };

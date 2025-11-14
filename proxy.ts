@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const logginedRoutes = ['/profile', '/dashboard', '/orders'];
+const logginedRoutes = ['/profile', '/orders'];
 
 export async function proxy(request: NextRequest) {
   const headers = new Headers(request.headers);

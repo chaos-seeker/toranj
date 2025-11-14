@@ -19,7 +19,7 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
       select: {
         id: true,
         fullName: true,
-        phone: true,
+        phoneNumber: true,
         address: true,
         orders: {
           include: {
@@ -27,7 +27,7 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
               select: {
                 id: true,
                 fullName: true,
-                phone: true,
+                phoneNumber: true,
                 address: true,
               },
             },
@@ -96,7 +96,7 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
         user: {
           id: user.id,
           fullName: user.fullName,
-          phoneNumber: user.phone,
+          phoneNumber: user.phoneNumber,
           address: user.address,
         },
         createdAt: order.createdAt,
@@ -106,7 +106,7 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
     return {
       id: user.id,
       fullName: user.fullName,
-      phoneNumber: user.phone,
+      phoneNumber: user.phoneNumber,
       address: user.address,
       orders,
     };

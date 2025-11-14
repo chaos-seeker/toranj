@@ -13,13 +13,6 @@ export const sendCartItems = protectedProcedure
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    if (!ctx.userId) {
-      return {
-        message: 'دسترسی غیرمجاز',
-        status: 'fail' as const,
-      };
-    }
-
     const productIds = input.items.map((item) => item.productID);
     const existingProducts = await ctx.prisma.product.findMany({
       where: {
@@ -52,7 +45,7 @@ export const sendCartItems = protectedProcedure
           select: {
             id: true,
             fullName: true,
-            phone: true,
+            phoneNumber: true,
             address: true,
           },
         },
@@ -107,7 +100,7 @@ export const sendCartItems = protectedProcedure
         user: {
           id: order.user.id,
           fullName: order.user.fullName,
-          phoneNumber: order.user.phone,
+          phoneNumber: order.user.phoneNumber,
           address: order.user.address,
         },
         createdAt: order.createdAt,

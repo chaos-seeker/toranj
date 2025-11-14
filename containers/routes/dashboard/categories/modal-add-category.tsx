@@ -91,9 +91,10 @@ export function ModalAddCategory() {
           {/* submit */}
           <button
             type="submit"
-            className="rounded-lg bg-teal p-4 text-white transition-all"
+            disabled={addCategoryMutation.isPending}
+            className="rounded-lg bg-teal p-4 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            افزودن
+            {addCategoryMutation.isPending ? 'در حال افزودن...' : 'افزودن'}
           </button>
         </form>
       </div>

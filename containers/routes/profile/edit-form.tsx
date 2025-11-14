@@ -18,13 +18,6 @@ export function EditForm() {
         least3characters: 'نام و نام خانوادگی باید حداقل 3 کاراکتر باشد!',
       },
     },
-    phoneNumber: {
-      label: 'شماره موبایل',
-      type: 'number',
-      errors: {
-        isNotCorrect: 'شماره موبایل وارد شده معتبر نیست!',
-      },
-    },
     address: {
       label: 'آدرس',
       type: 'text',
@@ -37,9 +30,6 @@ export function EditForm() {
     fullName: z.string().min(3, {
       message: formFields.fullName.errors.least3characters,
     }),
-    phoneNumber: z.string().regex(new RegExp(/^0\d{10}$/), {
-      message: formFields.phoneNumber.errors.isNotCorrect,
-    }),
     address: z.string().min(10, {
       message: formFields.address.errors.least10characters,
     }),
@@ -48,7 +38,6 @@ export function EditForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: '',
-      phoneNumber: '',
       address: '',
     },
   });
@@ -57,7 +46,6 @@ export function EditForm() {
   const handleSubmitForm = async () => {
     const res = await updateAuthMutation.mutateAsync({
       fullName: form.getValues('fullName'),
-      phoneNumber: form.getValues('phoneNumber'),
       address: form.getValues('address'),
     });
     if (res.status === 'success') {
@@ -71,7 +59,6 @@ export function EditForm() {
     if (fetchAuth.data) {
       form.reset({
         fullName: fetchAuth.data.fullName,
-        phoneNumber: fetchAuth.data.phoneNumber,
         address: fetchAuth.data.address,
       });
     }
@@ -90,8 +77,12 @@ export function EditForm() {
           ))}
         </div>
         {/* submit */}
-        <button type="submit" className="rounded-lg bg-teal p-4 text-white">
-          ذخیره
+        <button
+          type="submit"
+          disabled={updateAuthMutation.isPending}
+          className="rounded-lg bg-teal p-4 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {updateAuthMutation.isPending ? 'در حال ذخیره...' : 'ذخیره'}
         </button>
       </form>
     </section>

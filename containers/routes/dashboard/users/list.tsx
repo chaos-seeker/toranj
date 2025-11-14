@@ -17,14 +17,6 @@ export function List() {
     },
   );
 
-  if (fetchUsers.isLoading) {
-    return <Loader />;
-  }
-
-  if (fetchUsers.data?.length === 0) {
-    return <Empty text="کاربری برای نمایش وجود ندارد!" />;
-  }
-
   const handleDeleteUser = async (id: string) => {
     const res = await deleteUserMutation.mutateAsync({ id });
     if (res.status === 'success') {
@@ -33,6 +25,14 @@ export function List() {
       toast.error(res.message);
     }
   };
+
+  if (fetchUsers.isLoading || deleteUserMutation.isPending) {
+    return <Loader />;
+  }
+
+  if (fetchUsers.data?.length === 0 || !fetchUsers.data) {
+    return <Empty text="کاربری وجود ندارد" />;
+  }
 
   return (
     <section className="size-full overflow-hidden">

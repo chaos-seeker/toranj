@@ -10,6 +10,7 @@ import { PiShoppingBagOpenFill } from 'react-icons/pi';
 import { trpc } from '@/lib/trpc';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cn } from '@/utils/cn';
+import { TbLayoutDashboardFilled } from 'react-icons/tb';
 
 export function Header() {
   const pathname = usePathname();
@@ -83,30 +84,38 @@ export function Header() {
             ))}
           </ul>
         </nav>
-        {/* login / profile || fullname / logout */}
-        {fetchAuth.data ? (
-          <div className="flex items-center gap-3">
-            <Link
-              href="/profile"
-              className="max-w-32 truncate rounded-lg bg-green p-2.5 font-medium text-teal"
+        {/* login / profile || fullname / logout || dashboard */}
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard">
+            <div className="relative flex items-center gap-2 rounded-lg border border-yellow p-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal">
+              <p className="whitespace-nowrap text-smp">داشبورد</p>
+              <TbLayoutDashboardFilled size={25} />
+            </div>
+          </Link>
+          {fetchAuth.data ? (
+            <div className="flex items-center gap-3">
+              <Link
+                href="/profile"
+                className="max-w-32 truncate rounded-lg bg-green p-2.5 font-medium text-teal"
+              >
+                {fetchAuth.data.fullName}
+              </Link>
+              <button onClick={handleLogout}>
+                <div className="relative flex items-center gap-2 rounded-lg border border-yellow p-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal">
+                  <p className="whitespace-nowrap text-smp">خروج</p>
+                  <LuLogOut size={25} />
+                </div>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleShowModalLogin}
+              className="rounded-lg bg-green p-2.5 font-medium text-teal"
             >
-              {fetchAuth.data.fullName}
-            </Link>
-            <button onClick={handleLogout}>
-              <div className="relative flex items-center gap-2 rounded-lg border border-yellow p-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal">
-                <p className="whitespace-nowrap text-smp">خروج</p>
-                <LuLogOut size={25} />
-              </div>
+              ورود / ثبت نام
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={handleShowModalLogin}
-            className="rounded-lg bg-green p-2.5 font-medium text-teal"
-          >
-            ورود / ثبت نام
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );

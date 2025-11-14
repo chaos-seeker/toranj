@@ -57,7 +57,7 @@ export function Feild(props: IFeildProps) {
           className={cn({ 'border-red-500': !!error })}
         />
       )}
-      {!!error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {!!error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

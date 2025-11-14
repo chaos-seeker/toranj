@@ -105,9 +105,10 @@ export function ModalEditCategory() {
           {/* submit */}
           <button
             type="submit"
-            className="rounded-lg bg-teal p-4 text-white transition-all"
+            disabled={editCategoryMutation.isPending}
+            className="rounded-lg bg-teal p-4 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            ذخیره
+            {editCategoryMutation.isPending ? 'در حال ذخیره...' : 'ذخیره'}
           </button>
         </form>
       </div>
