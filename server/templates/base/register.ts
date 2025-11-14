@@ -2,7 +2,7 @@ import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { publicProcedure, router } from '../../trpc
+import { publicProcedure } from '@/server/trpc';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 

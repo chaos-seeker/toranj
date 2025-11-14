@@ -53,31 +53,76 @@ export function List() {
             </tr>
           </thead>
           <tbody>
-            {fetchClientOrders.data?.map((itemOrder, index) =>
-              itemOrder.products.map((itemProduct) => (
-                <tr key={itemProduct.productID._id} className="even:bg-gray-50">
-                  <td>{index + 1}</td>
-                  <td>{itemOrder.userID.name}</td>
-                  <td>{itemOrder.userID.lastName}</td>
-                  <td>{itemOrder.userID.address}</td>
-                  <td className="max-w-[150px] truncate text-right">
-                    {itemProduct.productID.title}
-                  </td>
-                  <td>
-                    {formatPrice(itemProduct.productID.priceWithDiscount)}
-                  </td>
-                  <td>
-                    {formatPrice(itemProduct.productID.priceWithoutDiscount)}
-                  </td>
-                  <td>{itemProduct.quantity}</td>
-                  <td>
-                    {formatPrice(
-                      Number(itemProduct.productID.priceWithDiscount) *
-                        itemProduct.quantity,
-                    )}
-                  </td>
-                </tr>
-              )),
+            {fetchClientOrders.data?.map(
+              (
+                itemOrder: {
+                  _id: string;
+                  products: Array<{
+                    productID: {
+                      _id: string;
+                      title: string;
+                      description: string;
+                      image: { path: string };
+                      priceWithoutDiscount: number;
+                      priceWithDiscount: number;
+                      categoryID: string;
+                    };
+                    quantity: number;
+                  }>;
+                  userID: {
+                    name: string;
+                    lastName: string;
+                    phone: string;
+                    email: string;
+                    address: string;
+                  };
+                  status: string;
+                  createdAt: Date;
+                },
+                index: number,
+              ) =>
+                itemOrder.products.map(
+                  (itemProduct: {
+                    productID: {
+                      _id: string;
+                      title: string;
+                      description: string;
+                      image: { path: string };
+                      priceWithoutDiscount: number;
+                      priceWithDiscount: number;
+                      categoryID: string;
+                    };
+                    quantity: number;
+                  }) => (
+                    <tr
+                      key={itemProduct.productID._id}
+                      className="even:bg-gray-50"
+                    >
+                      <td>{index + 1}</td>
+                      <td>{itemOrder.userID.name}</td>
+                      <td>{itemOrder.userID.lastName}</td>
+                      <td>{itemOrder.userID.address}</td>
+                      <td className="max-w-[150px] truncate text-right">
+                        {itemProduct.productID.title}
+                      </td>
+                      <td>
+                        {formatPrice(itemProduct.productID.priceWithDiscount)}
+                      </td>
+                      <td>
+                        {formatPrice(
+                          itemProduct.productID.priceWithoutDiscount,
+                        )}
+                      </td>
+                      <td>{itemProduct.quantity}</td>
+                      <td>
+                        {formatPrice(
+                          Number(itemProduct.productID.priceWithDiscount) *
+                            itemProduct.quantity,
+                        )}
+                      </td>
+                    </tr>
+                  ),
+                ),
             )}
           </tbody>
         </table>

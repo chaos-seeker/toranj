@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { publicProcedure } from '../../trpc';
+import { publicProcedure } from '@/server/trpc';
 
 export const getProductByCategoryId = publicProcedure
   .input(z.object({ categoryId: z.string() }))

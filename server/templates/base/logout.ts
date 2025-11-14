@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { protectedProcedure, router } from '../../trpc
+import { protectedProcedure } from '@/server/trpc';
 
 const removeTokenCookie = async () => {
   const cookieStore = await cookies();

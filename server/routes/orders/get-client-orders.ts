@@ -1,4 +1,4 @@
-import { protectedProcedure } from '../../trpc';
+import { protectedProcedure } from '@/server/trpc';
 
 export const getClientOrders = protectedProcedure.query(async ({ ctx }) => {
   if (!ctx.userId) {

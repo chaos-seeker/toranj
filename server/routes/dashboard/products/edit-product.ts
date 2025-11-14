@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { adminProcedure } from '../../../trpc';
+import { adminProcedure } from '@/server/trpc';
 
 export const editProduct = adminProcedure
   .input(

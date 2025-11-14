@@ -132,10 +132,12 @@ export function ModalEditProduct() {
     }
   };
   if (fetchCategories.isSuccess) {
-    formFields.category.data = fetchCategories.data?.map((item) => ({
-      key: item.title,
-      value: item._id,
-    }));
+    formFields.category.data = fetchCategories.data?.map(
+      (item: { _id: string; title: string; image: { path: string } }) => ({
+        key: item.title,
+        value: item._id,
+      }),
+    );
   }
 
   // auto fill form

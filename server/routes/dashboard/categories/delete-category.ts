@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { adminProcedure } from '../../../trpc';
+import { adminProcedure } from '@/server/trpc';
 
 export const deleteCategory = adminProcedure
   .input(z.object({ id: z.string().min(1) }))

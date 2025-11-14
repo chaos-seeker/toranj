@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
-import { publicProcedure } from '../../trpc
+import { publicProcedure } from '@/server/trpc';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 

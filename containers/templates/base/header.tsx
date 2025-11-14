@@ -56,12 +56,6 @@ export function Header() {
   };
   const isAdmin = fetchAuth.data?.role === 'ADMIN';
 
-  // show modal description in first render
-  const descriptionToggleUrlState = useToggleUrlState('description');
-  useEffect(() => {
-    descriptionToggleUrlState.show();
-  }, []);
-
   return (
     <header className="container">
       <div className="my-6 flex items-center justify-between rounded-2xl bg-teal p-4">

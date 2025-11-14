@@ -1,4 +1,4 @@
-import { adminProcedure } from '../../../trpc';
+import { adminProcedure } from '@/server/trpc';
 
 export const getDashboardOrders = adminProcedure.query(async ({ ctx }) => {
   const orders = await ctx.prisma.order.findMany({

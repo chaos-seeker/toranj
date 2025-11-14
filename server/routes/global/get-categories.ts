@@ -1,4 +1,4 @@
-import { publicProcedure } from '../../trpc';
+import { publicProcedure } from '@/server/trpc';
 
 export const getCategories = publicProcedure.query(async ({ ctx }) => {
   const categories = await ctx.prisma.category.findMany({
