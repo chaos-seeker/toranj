@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIlogin } from '@/actions/templates/base/login';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -50,12 +50,11 @@ export function ModalLogin() {
       password: 'aaaaaaaa',
     },
   });
+  const loginMutation = trpc.templates.base.login.login.useMutation();
   const handleSubmitForm = async () => {
-    const res = await APIlogin({
-      body: {
-        phone: form.getValues('phoneNumber'),
-        password: form.getValues('password'),
-      },
+    const res = await loginMutation.mutateAsync({
+      phone: form.getValues('phoneNumber'),
+      password: form.getValues('password'),
     });
     if (res.status === 'success') {
       toast.success(res.message);

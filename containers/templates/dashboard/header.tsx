@@ -7,7 +7,7 @@ import { BiSolidCategory } from 'react-icons/bi';
 import { FaShoppingCart, FaUsers } from 'react-icons/fa';
 import { LuLogOut } from 'react-icons/lu';
 import { PiShoppingBagOpenFill } from 'react-icons/pi';
-import { APIlogout } from '@/actions/templates/base/logout';
+import { trpc } from '@/lib/trpc';
 import { cn } from '@/utils/cn';
 
 export function Header() {
@@ -53,8 +53,9 @@ interface IDesktopProps {
 const Desktop = (props: IDesktopProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  const logoutMutation = trpc.templates.base.logout.logout.useMutation();
   const handleLogout = () => {
-    APIlogout();
+    logoutMutation.mutate();
     router.push('/');
     toast.success('با موفقیت خارج شدید');
     setTimeout(() => window.location.reload(), 3000);

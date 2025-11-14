@@ -1,16 +1,13 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { APIgetDashboardOrders } from '@/actions/routes/dashboard/orders/get-dashboard-orders';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
 
 export function List() {
-  const fetchClientOrders = useQuery({
-    queryKey: ['dashboard-orders'],
-    queryFn: () => APIgetDashboardOrders(),
-  });
+  const fetchClientOrders =
+    trpc.routes.dashboard.orders.getDashboardOrders.getDashboardOrders.useQuery();
 
   if (fetchClientOrders.isLoading) {
     return <Loader />;

@@ -5,7 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIaddCategory } from '@/actions/routes/dashboard/categories/add-category';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -50,15 +50,18 @@ export function ModalAddCategory() {
       title: '',
     },
   });
+  const addCategoryMutation =
+    trpc.routes.dashboard.categories.addCategory.addCategory.useMutation({
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ['categories'] });
+      },
+    });
   const handleSubmitForm = async (data: any) => {
-    const formData = new FormData();
-    formData.append('cover', data.image[0]);
-    formData.append('title', data.title);
-    const res = await APIaddCategory({ body: formData });
+    const res = await addCategoryMutation.mutateAsync({
+      title: data.title,
+      imagePath: data.image[0] ? URL.createObjectURL(data.image[0]) : '',
+    });
     if (res.status === 'success') {
-      await queryClient.refetchQueries({
-        queryKey: ['categories'],
-      });
       toast.success(res.message);
       form.reset();
       handleClose();

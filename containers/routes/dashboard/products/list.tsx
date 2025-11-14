@@ -1,22 +1,23 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
-import { APIdeleteProduct } from '@/actions/routes/dashboard/products/delete-product';
-import { APIgetProducts } from '@/actions/routes/global/get-products';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { formatPrice } from '@/utils/format-price';
 
 export function List() {
-  const fetchProducts = useQuery({
-    queryKey: ['products'],
-    queryFn: () => APIgetProducts(),
-  });
+  const fetchProducts = trpc.routes.global.getProducts.getProducts.useQuery();
+  const deleteProductMutation =
+    trpc.routes.dashboard.products.deleteProduct.deleteProduct.useMutation({
+      onSuccess: () => {
+        fetchProducts.refetch();
+      },
+    });
   const addProductToggleUrlState = useToggleUrlState('add-product');
   const handleShowModalAddProduct = () => {
     addProductToggleUrlState.show();
@@ -39,13 +40,8 @@ export function List() {
   }
 
   const handleDeleteProduct = async (id: string) => {
-    const res = await APIdeleteProduct({
-      path: {
-        id,
-      },
-    });
+    const res = await deleteProductMutation.mutateAsync({ id });
     if (res.status === 'success') {
-      fetchProducts.refetch();
       toast.success(res.message);
     } else {
       toast.error(res.message);

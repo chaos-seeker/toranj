@@ -1,12 +1,10 @@
 'use client';
 
 import 'swiper/css';
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { APIgetCategories } from '@/actions/routes/global/get-categories';
-import { APIgetProductsByCategoryId } from '@/actions/routes/home/get-product-by-category-id';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { ProductCard } from '@/components/product-card';
@@ -40,10 +38,8 @@ const Top = (props: ITopProps) => {
   const handleActiveCategory = (value: number) => {
     props.setActivedIndex(value);
   };
-  const fetchCategories = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => APIgetCategories(),
-  });
+  const fetchCategories =
+    trpc.routes.global.getCategories.getCategories.useQuery();
 
   if (fetchCategories.data?.length === 0) {
     return <Empty text="دسته بندی ای برای نمایش وجود ندارد!" />;
@@ -95,22 +91,19 @@ interface IBottomProps {
 }
 
 const Bottom = (props: IBottomProps) => {
-  const fetchCategories = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => APIgetCategories(),
-  });
-  const fetchProductsByCategory = useQuery({
-    queryKey: [
-      'products-by-category',
-      fetchCategories.data?.[props.activedIndex]?._id,
-    ],
-    queryFn: () =>
-      APIgetProductsByCategoryId({
-        path: {
-          categoryId: String(fetchCategories.data?.[props.activedIndex]?._id),
-        },
-      }),
-  });
+  const fetchCategories =
+    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchProductsByCategory =
+    trpc.routes.home.getProductByCategoryId.getProductByCategoryId.useQuery(
+      {
+        categoryId: String(
+          fetchCategories.data?.[props.activedIndex]?._id || '',
+        ),
+      },
+      {
+        enabled: !!fetchCategories.data?.[props.activedIndex]?._id,
+      },
+    );
 
   if (fetchProductsByCategory.isLoading) {
     return <Loader />;

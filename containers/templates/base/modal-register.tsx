@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIregister } from '@/actions/templates/base/register';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -103,17 +103,16 @@ export function ModalRegister() {
       address: '',
     },
   });
+  const registerMutation = trpc.templates.base.register.register.useMutation();
   const handleSubmitForm = async () => {
-    const res = await APIregister({
-      body: {
-        name: form.getValues('firstName'),
-        lastName: form.getValues('lastName'),
-        phone: form.getValues('phoneNumber'),
-        email: form.getValues('email'),
-        address: form.getValues('address'),
-        password: form.getValues('password'),
-        confirmPassword: form.getValues('confirmPassword'),
-      },
+    const res = await registerMutation.mutateAsync({
+      name: form.getValues('firstName'),
+      lastName: form.getValues('lastName'),
+      phone: form.getValues('phoneNumber'),
+      email: form.getValues('email'),
+      address: form.getValues('address'),
+      password: form.getValues('password'),
+      confirmPassword: form.getValues('confirmPassword'),
     });
     if (res.status === 'success') {
       toast.success(res.message);

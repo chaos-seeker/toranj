@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIeditCategory } from '@/actions/routes/dashboard/categories/edit-category';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -53,18 +53,19 @@ export function ModalEditCategory() {
       title: '',
     },
   });
+  const editCategoryMutation =
+    trpc.routes.dashboard.categories.editCategory.editCategory.useMutation({
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ['categories'] });
+      },
+    });
   const handleSubmitForm = async (data: any) => {
-    const formData = new FormData();
-    formData.append('cover', data.image[0]);
-    formData.append('title', data.title);
-    const res = await APIeditCategory({
-      path: String(searchParams.get('id')),
-      body: formData,
+    const res = await editCategoryMutation.mutateAsync({
+      id: String(searchParams.get('id')),
+      title: data.title,
+      imagePath: data.image[0] ? URL.createObjectURL(data.image[0]) : undefined,
     });
     if (res.status === 'success') {
-      await queryClient.refetchQueries({
-        queryKey: ['categories'],
-      });
       toast.success(res.message);
       form.reset();
       handleClose();

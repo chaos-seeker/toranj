@@ -1,9 +1,8 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useKillua } from 'killua';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { APIsendCartItems } from '@/actions/routes/cart/send-cart-items';
-import { APIgetAuth } from '@/actions/templates/base/get-auth';
+import { trpc } from '@/lib/trpc';
 import { useUpdateQuery } from '@/hooks/update-query';
 import { cartSlice } from '@/slices/cart';
 import { formatPrice } from '@/utils/format-price';
@@ -13,24 +12,22 @@ export function PlaceOrder() {
   const updateQuery = useUpdateQuery();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const fetchAuth = useQuery({
-    queryKey: ['auth'],
-    queryFn: () => APIgetAuth(),
-  });
-  const isLoggined = Boolean(fetchAuth.data);
-  const handleSendCartItems = async () => {
-    const res = await APIsendCartItems({
-      body: {
-        items: localstorageCart.get().map((item) => ({
-          productID: item._id,
-          quantity: item.quantity,
-        })),
+  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
+  const sendCartItemsMutation =
+    trpc.routes.cart.sendCartItems.sendCartItems.useMutation({
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ['client-orders'] });
       },
     });
+  const isLoggined = Boolean(fetchAuth.data);
+  const handleSendCartItems = async () => {
+    const res = await sendCartItemsMutation.mutateAsync({
+      items: localstorageCart.get().map((item) => ({
+        productID: item._id,
+        quantity: item.quantity,
+      })),
+    });
     if (res.status === 'success') {
-      await queryClient.refetchQueries({
-        queryKey: ['client-orders'],
-      });
       toast.success(res.message);
       localstorageCart.reducers.reset();
       router.push('/orders');

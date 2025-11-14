@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -9,8 +8,7 @@ import { IoFastFood } from 'react-icons/io5';
 import { LuLogOut } from 'react-icons/lu';
 import { PiShoppingBagOpenFill } from 'react-icons/pi';
 import { TbLayoutDashboardFilled } from 'react-icons/tb';
-import { APIgetAuth } from '@/actions/templates/base/get-auth';
-import { APIlogout } from '@/actions/templates/base/logout';
+import { trpc } from '@/lib/trpc';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cn } from '@/utils/cn';
 
@@ -48,12 +46,10 @@ export function Header() {
       path: '/cart',
     },
   ];
-  const fetchAuth = useQuery({
-    queryKey: ['auth'],
-    queryFn: () => APIgetAuth(),
-  });
+  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
+  const logoutMutation = trpc.templates.base.logout.logout.useMutation();
   const handleLogout = () => {
-    APIlogout();
+    logoutMutation.mutate();
     router.push('/');
     toast.success('با موفقیت خارج شدید');
     setTimeout(() => window.location.reload(), 3000);

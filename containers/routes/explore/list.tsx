@@ -1,16 +1,12 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { APIgetProducts } from '@/actions/routes/global/get-products';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { ProductCard } from '@/components/product-card';
 
 export function List() {
-  const fetchProducts = useQuery({
-    queryKey: ['products'],
-    queryFn: () => APIgetProducts(),
-  });
+  const fetchProducts = trpc.routes.global.getProducts.getProducts.useQuery();
 
   if (fetchProducts.isLoading) {
     return <Loader />;

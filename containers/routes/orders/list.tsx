@@ -1,17 +1,13 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { APIgetClientOrders } from '@/actions/routes/orders/get-client-orders';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
 
 export function List() {
-  const fetchClientOrders = useQuery({
-    queryKey: ['client-orders'],
-    queryFn: () => APIgetClientOrders(),
-  });
+  const fetchClientOrders = trpc.routes.orders.getClientOrders.getClientOrders.useQuery();
 
   if (fetchClientOrders.isLoading) {
     return <Loader />;

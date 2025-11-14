@@ -1,13 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIupdateAuth } from '@/actions/routes/profile/update-auth';
-import { APIgetAuth } from '@/actions/templates/base/get-auth';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 
 export function EditForm() {
@@ -74,15 +72,16 @@ export function EditForm() {
       address: '',
     },
   });
+  const updateAuthMutation =
+    trpc.routes.profile.updateAuth.updateAuth.useMutation();
+  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
   const handleSubmitForm = async () => {
-    const res = await APIupdateAuth({
-      body: {
-        name: form.getValues('firstName'),
-        lastName: form.getValues('lastName'),
-        email: form.getValues('email'),
-        phone: form.getValues('phoneNumber'),
-        address: form.getValues('address'),
-      },
+    const res = await updateAuthMutation.mutateAsync({
+      name: form.getValues('firstName'),
+      lastName: form.getValues('lastName'),
+      email: form.getValues('email'),
+      phone: form.getValues('phoneNumber'),
+      address: form.getValues('address'),
     });
     if (res.status === 'success') {
       toast.success(res.message);
@@ -91,12 +90,6 @@ export function EditForm() {
       toast.error(res.message);
     }
   };
-
-  // fill form with user data
-  const fetchAuth = useQuery({
-    queryKey: ['auth'],
-    queryFn: () => APIgetAuth(),
-  });
   useEffect(() => {
     if (fetchAuth.data) {
       form.reset({

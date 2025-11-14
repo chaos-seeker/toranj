@@ -1,20 +1,26 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { IoMdTrash } from 'react-icons/io';
-import { APIchangeUserRole } from '@/actions/routes/dashboard/users/change-user-role';
-import { APIdeleteUser } from '@/actions/routes/dashboard/users/delete-user';
-import { APIgetUsers } from '@/actions/routes/dashboard/users/get-users';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { cn } from '@/utils/cn';
 
 export function List() {
-  const fetchUsers = useQuery({
-    queryKey: ['users'],
-    queryFn: () => APIgetUsers(),
-  });
+  const fetchUsers = trpc.routes.dashboard.users.getUsers.getUsers.useQuery();
+  const deleteUserMutation =
+    trpc.routes.dashboard.users.deleteUser.deleteUser.useMutation({
+      onSuccess: () => {
+        fetchUsers.refetch();
+      },
+    });
+  const changeUserRoleMutation =
+    trpc.routes.dashboard.users.changeUserRole.changeUserRole.useMutation({
+      onSuccess: () => {
+        fetchUsers.refetch();
+      },
+    });
 
   if (fetchUsers.isLoading) {
     return <Loader />;
@@ -25,13 +31,8 @@ export function List() {
   }
 
   const handleDeleteUser = async (id: string) => {
-    const res = await APIdeleteUser({
-      path: {
-        id,
-      },
-    });
+    const res = await deleteUserMutation.mutateAsync({ id });
     if (res.status === 'success') {
-      fetchUsers.refetch();
       toast.success(res.message);
     } else {
       toast.error(res.message);
@@ -39,16 +40,11 @@ export function List() {
   };
 
   const handleChangeUserRole = async (params: { id: string; role: string }) => {
-    const res = await APIchangeUserRole({
-      path: {
-        id: params.id,
-      },
-      body: {
-        role: params.role.toUpperCase() as 'USER' | 'ADMIN',
-      },
+    const res = await changeUserRoleMutation.mutateAsync({
+      id: params.id,
+      role: params.role.toUpperCase() as 'USER' | 'ADMIN',
     });
     if (res.status === 'success') {
-      fetchUsers.refetch();
       toast.success(res.message);
     } else {
       toast.error(res.message);

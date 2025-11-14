@@ -1,21 +1,23 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { IoMdTrash } from 'react-icons/io';
 import { MdEdit } from 'react-icons/md';
-import { APIdeleteCategory } from '@/actions/routes/dashboard/categories/delete-category';
-import { APIgetCategories } from '@/actions/routes/global/get-categories';
+import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 
 export function List() {
-  const fetchCategories = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => APIgetCategories(),
-  });
+  const fetchCategories =
+    trpc.routes.global.getCategories.getCategories.useQuery();
+  const deleteCategoryMutation =
+    trpc.routes.dashboard.categories.deleteCategory.deleteCategory.useMutation({
+      onSuccess: () => {
+        fetchCategories.refetch();
+      },
+    });
   const addCategoryToggleUrlState = useToggleUrlState('add-category');
   const handleShowModalAddCategory = () => {
     addCategoryToggleUrlState.show();
@@ -29,13 +31,8 @@ export function List() {
     });
   };
   const handleDeleteCategory = async (id: string) => {
-    const res = await APIdeleteCategory({
-      path: {
-        id,
-      },
-    });
+    const res = await deleteCategoryMutation.mutateAsync({ id });
     if (res.status === 'success') {
-      fetchCategories.refetch();
       toast.success(res.message);
     } else {
       toast.error(res.message);

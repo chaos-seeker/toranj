@@ -1,14 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
-import { APIeditProduct } from '@/actions/routes/dashboard/products/edit-product';
-import { APIgetCategories } from '@/actions/routes/global/get-categories';
+import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -107,22 +106,25 @@ export function ModalEditProduct() {
       category: '',
     },
   });
+  const editProductMutation =
+    trpc.routes.dashboard.products.editProduct.editProduct.useMutation({
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ['products'] });
+      },
+    });
+  const fetchCategories =
+    trpc.routes.global.getCategories.getCategories.useQuery();
   const handleSubmitForm = async (data: any) => {
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('description', data.description);
-    formData.append('priceWithoutDiscount', data.priceWithoutDiscount);
-    formData.append('priceWithDiscount', data.priceWithDiscount);
-    formData.append('categoryID', data.category);
-    formData.append('image', data.image[0]);
-    const res = await APIeditProduct({
-      path: String(searchParams.get('id')),
-      body: formData,
+    const res = await editProductMutation.mutateAsync({
+      id: String(searchParams.get('id')),
+      title: data.title,
+      description: data.description,
+      priceWithoutDiscount: Number(data.priceWithoutDiscount),
+      priceWithDiscount: Number(data.priceWithDiscount),
+      categoryId: data.category,
+      imagePath: data.image[0] ? URL.createObjectURL(data.image[0]) : undefined,
     });
     if (res.status === 'success') {
-      await queryClient.refetchQueries({
-        queryKey: ['products'],
-      });
       toast.success(res.message);
       handleClose();
       form.reset();
@@ -130,12 +132,6 @@ export function ModalEditProduct() {
       toast.error(res.message);
     }
   };
-
-  // fetch categories and set data category field
-  const fetchCategories = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => APIgetCategories(),
-  });
   if (fetchCategories.isSuccess) {
     formFields.category.data = fetchCategories.data?.map((item) => ({
       key: item.title,
