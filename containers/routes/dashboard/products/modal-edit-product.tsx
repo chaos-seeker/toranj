@@ -16,7 +16,7 @@ import type { TCategory } from '@/types/category';
 
 export function ModalEditProduct() {
   const editProductToggleUrlState = useToggleUrlState('edit-product');
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const searchParams = useSearchParams();
   const handleClose = () => {
     editProductToggleUrlState.hide([
@@ -66,6 +66,7 @@ export function ModalEditProduct() {
       label: 'تصویر',
       errors: {
         isRequired: 'این فیلد اجباری است!',
+        maxSize: 'حجم تصویر نباید بیشتر از 1 مگابایت باشد!',
       },
     },
     category: {
@@ -78,9 +79,20 @@ export function ModalEditProduct() {
     },
   };
   const formSchema = z.object({
-    image: z.any().refine((file) => file?.length > 0, {
-      message: formFields.image.errors.isRequired,
-    }),
+    image: z
+      .any()
+      .refine((file) => file?.length > 0, {
+        message: formFields.image.errors.isRequired,
+      })
+      .refine(
+        (file) => {
+          if (!file || !file[0]) return true;
+          return file[0].size <= 1024 * 1024;
+        },
+        {
+          message: formFields.image.errors.maxSize,
+        },
+      ),
     title: z.string().min(1, {
       message: formFields.title.errors.isRequired,
     }),
@@ -110,8 +122,9 @@ export function ModalEditProduct() {
   });
   const editProductMutation =
     trpc.routes.dashboard.products.editProduct.useMutation({
-      onSuccess: () => {
-        queryClient.refetchQueries({ queryKey: ['products'] });
+      onSuccess: async () => {
+        await utils.routes.global.getProducts.invalidate();
+        await utils.routes.home.getProductByCategoryId.invalidate();
       },
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();

@@ -14,7 +14,7 @@ import type { TCategory } from '@/types/category';
 
 export function ModalAddProduct() {
   const addProductToggleUrlState = useToggleUrlState('add-product');
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const handleClose = () => {
     addProductToggleUrlState.hide();
     form.reset();
@@ -55,6 +55,7 @@ export function ModalAddProduct() {
       label: 'تصویر',
       errors: {
         isRequired: 'این فیلد اجباری است!',
+        maxSize: 'حجم تصویر نباید بیشتر از 1 مگابایت باشد!',
       },
     },
     category: {
@@ -67,9 +68,20 @@ export function ModalAddProduct() {
     },
   };
   const formSchema = z.object({
-    image: z.any().refine((file) => file?.length > 0, {
-      message: formFields.image.errors.isRequired,
-    }),
+    image: z
+      .any()
+      .refine((file) => file?.length > 0, {
+        message: formFields.image.errors.isRequired,
+      })
+      .refine(
+        (file) => {
+          if (!file || !file[0]) return true;
+          return file[0].size <= 1024 * 1024;
+        },
+        {
+          message: formFields.image.errors.maxSize,
+        },
+      ),
     title: z.string().min(1, {
       message: formFields.title.errors.isRequired,
     }),
@@ -99,8 +111,9 @@ export function ModalAddProduct() {
   });
   const addProductMutation =
     trpc.routes.dashboard.products.addProduct.useMutation({
-      onSuccess: () => {
-        queryClient.refetchQueries({ queryKey: ['products'] });
+      onSuccess: async () => {
+        await utils.routes.global.getProducts.invalidate();
+        await utils.routes.home.getProductByCategoryId.invalidate();
       },
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();

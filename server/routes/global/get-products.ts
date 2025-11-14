@@ -2,7 +2,13 @@ import { publicProcedure } from '@/server/trpc';
 
 export const getProducts = publicProcedure.query(async ({ ctx }) => {
   const products = await ctx.prisma.product.findMany({
-    include: {
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      image: true,
+      priceWithoutDiscount: true,
+      priceWithDiscount: true,
       category: {
         select: {
           id: true,
