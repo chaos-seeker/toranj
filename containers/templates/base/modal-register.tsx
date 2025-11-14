@@ -103,7 +103,7 @@ export function ModalRegister() {
       address: '',
     },
   });
-  const registerMutation = trpc.templates.base.register.register.useMutation();
+  const registerMutation = trpc.templates.base.register.useMutation();
   const handleSubmitForm = async () => {
     const res = await registerMutation.mutateAsync({
       name: form.getValues('firstName'),

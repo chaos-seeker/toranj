@@ -72,9 +72,8 @@ export function EditForm() {
       address: '',
     },
   });
-  const updateAuthMutation =
-    trpc.routes.profile.updateAuth.updateAuth.useMutation();
-  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
+  const updateAuthMutation = trpc.routes.profile.updateAuth.useMutation();
+  const fetchAuth = trpc.templates.base.getAuth.useQuery();
   const handleSubmitForm = async () => {
     const res = await updateAuthMutation.mutateAsync({
       name: form.getValues('firstName'),

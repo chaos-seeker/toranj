@@ -6,7 +6,7 @@ import { Loader } from '@/components/loader';
 import { ProductCard } from '@/components/product-card';
 
 export function List() {
-  const fetchProducts = trpc.routes.global.getProducts.getProducts.useQuery();
+  const fetchProducts = trpc.routes.global.getProducts.useQuery();
 
   if (fetchProducts.isLoading) {
     return <Loader />;

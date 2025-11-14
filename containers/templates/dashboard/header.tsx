@@ -53,7 +53,7 @@ interface IDesktopProps {
 const Desktop = (props: IDesktopProps) => {
   const router = useRouter();
   const pathname = usePathname();
-  const logoutMutation = trpc.templates.base.logout.logout.useMutation();
+  const logoutMutation = trpc.templates.base.logout.useMutation();
   const handleLogout = () => {
     logoutMutation.mutate();
     router.push('/');

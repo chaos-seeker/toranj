@@ -7,7 +7,7 @@ import { formatPrice } from '@/utils/format-price';
 
 export function List() {
   const fetchClientOrders =
-    trpc.routes.dashboard.orders.getDashboardOrders.getDashboardOrders.useQuery();
+    trpc.routes.dashboard.orders.getDashboardOrders.useQuery();
 
   if (fetchClientOrders.isLoading) {
     return <Loader />;

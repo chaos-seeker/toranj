@@ -46,8 +46,8 @@ export function Header() {
       path: '/cart',
     },
   ];
-  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
-  const logoutMutation = trpc.templates.base.logout.logout.useMutation();
+  const fetchAuth = trpc.templates.base.getAuth.useQuery();
+  const logoutMutation = trpc.templates.base.logout.useMutation();
   const handleLogout = () => {
     logoutMutation.mutate();
     router.push('/');

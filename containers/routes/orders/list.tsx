@@ -7,7 +7,7 @@ import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
 
 export function List() {
-  const fetchClientOrders = trpc.routes.orders.getClientOrders.getClientOrders.useQuery();
+  const fetchClientOrders = trpc.routes.orders.getClientOrders.useQuery();
 
   if (fetchClientOrders.isLoading) {
     return <Loader />;

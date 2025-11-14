@@ -54,7 +54,7 @@ export function ModalEditCategory() {
     },
   });
   const editCategoryMutation =
-    trpc.routes.dashboard.categories.editCategory.editCategory.useMutation({
+    trpc.routes.dashboard.categories.editCategory.useMutation({
       onSuccess: () => {
         queryClient.refetchQueries({ queryKey: ['categories'] });
       },

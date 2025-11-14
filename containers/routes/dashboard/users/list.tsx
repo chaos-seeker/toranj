@@ -8,15 +8,16 @@ import { Loader } from '@/components/loader';
 import { cn } from '@/utils/cn';
 
 export function List() {
-  const fetchUsers = trpc.routes.dashboard.users.getUsers.getUsers.useQuery();
-  const deleteUserMutation =
-    trpc.routes.dashboard.users.deleteUser.deleteUser.useMutation({
+  const fetchUsers = trpc.routes.dashboard.users.getUsers.useQuery();
+  const deleteUserMutation = trpc.routes.dashboard.users.deleteUser.useMutation(
+    {
       onSuccess: () => {
         fetchUsers.refetch();
       },
-    });
+    },
+  );
   const changeUserRoleMutation =
-    trpc.routes.dashboard.users.changeUserRole.changeUserRole.useMutation({
+    trpc.routes.dashboard.users.changeUserRole.useMutation({
       onSuccess: () => {
         fetchUsers.refetch();
       },

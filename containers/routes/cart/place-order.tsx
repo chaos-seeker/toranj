@@ -12,13 +12,12 @@ export function PlaceOrder() {
   const updateQuery = useUpdateQuery();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const fetchAuth = trpc.templates.base.getAuth.getAuth.useQuery();
-  const sendCartItemsMutation =
-    trpc.routes.cart.sendCartItems.sendCartItems.useMutation({
-      onSuccess: () => {
-        queryClient.refetchQueries({ queryKey: ['client-orders'] });
-      },
-    });
+  const fetchAuth = trpc.templates.base.getAuth.useQuery();
+  const sendCartItemsMutation = trpc.routes.cart.sendCartItems.useMutation({
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ['client-orders'] });
+    },
+  });
   const isLoggined = Boolean(fetchAuth.data);
   const handleSendCartItems = async () => {
     const res = await sendCartItemsMutation.mutateAsync({

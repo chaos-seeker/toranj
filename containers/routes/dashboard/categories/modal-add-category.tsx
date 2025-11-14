@@ -51,7 +51,7 @@ export function ModalAddCategory() {
     },
   });
   const addCategoryMutation =
-    trpc.routes.dashboard.categories.addCategory.addCategory.useMutation({
+    trpc.routes.dashboard.categories.addCategory.useMutation({
       onSuccess: () => {
         queryClient.refetchQueries({ queryKey: ['categories'] });
       },

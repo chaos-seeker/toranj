@@ -11,9 +11,9 @@ import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { formatPrice } from '@/utils/format-price';
 
 export function List() {
-  const fetchProducts = trpc.routes.global.getProducts.getProducts.useQuery();
+  const fetchProducts = trpc.routes.global.getProducts.useQuery();
   const deleteProductMutation =
-    trpc.routes.dashboard.products.deleteProduct.deleteProduct.useMutation({
+    trpc.routes.dashboard.products.deleteProduct.useMutation({
       onSuccess: () => {
         fetchProducts.refetch();
       },

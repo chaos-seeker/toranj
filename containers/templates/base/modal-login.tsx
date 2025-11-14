@@ -50,7 +50,7 @@ export function ModalLogin() {
       password: 'aaaaaaaa',
     },
   });
-  const loginMutation = trpc.templates.base.login.login.useMutation();
+  const loginMutation = trpc.templates.base.login.useMutation();
   const handleSubmitForm = async () => {
     const res = await loginMutation.mutateAsync({
       phone: form.getValues('phoneNumber'),

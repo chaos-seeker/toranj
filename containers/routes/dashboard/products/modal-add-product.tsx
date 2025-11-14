@@ -96,13 +96,12 @@ export function ModalAddProduct() {
     },
   });
   const addProductMutation =
-    trpc.routes.dashboard.products.addProduct.addProduct.useMutation({
+    trpc.routes.dashboard.products.addProduct.useMutation({
       onSuccess: () => {
         queryClient.refetchQueries({ queryKey: ['products'] });
       },
     });
-  const fetchCategories =
-    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const handleSubmitForm = async (data: any) => {
     const res = await addProductMutation.mutateAsync({
       title: data.title,

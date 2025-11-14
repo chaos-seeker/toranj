@@ -10,10 +10,9 @@ import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 
 export function List() {
-  const fetchCategories =
-    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const deleteCategoryMutation =
-    trpc.routes.dashboard.categories.deleteCategory.deleteCategory.useMutation({
+    trpc.routes.dashboard.categories.deleteCategory.useMutation({
       onSuccess: () => {
         fetchCategories.refetch();
       },

@@ -38,8 +38,7 @@ const Top = (props: ITopProps) => {
   const handleActiveCategory = (value: number) => {
     props.setActivedIndex(value);
   };
-  const fetchCategories =
-    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchCategories = trpc.routes.global.getCategories.useQuery();
 
   if (fetchCategories.data?.length === 0) {
     return <Empty text="دسته بندی ای برای نمایش وجود ندارد!" />;
@@ -91,10 +90,9 @@ interface IBottomProps {
 }
 
 const Bottom = (props: IBottomProps) => {
-  const fetchCategories =
-    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const fetchProductsByCategory =
-    trpc.routes.home.getProductByCategoryId.getProductByCategoryId.useQuery(
+    trpc.routes.home.getProductByCategoryId.useQuery(
       {
         categoryId: String(
           fetchCategories.data?.[props.activedIndex]?._id || '',

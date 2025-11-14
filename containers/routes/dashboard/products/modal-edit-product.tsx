@@ -107,13 +107,12 @@ export function ModalEditProduct() {
     },
   });
   const editProductMutation =
-    trpc.routes.dashboard.products.editProduct.editProduct.useMutation({
+    trpc.routes.dashboard.products.editProduct.useMutation({
       onSuccess: () => {
         queryClient.refetchQueries({ queryKey: ['products'] });
       },
     });
-  const fetchCategories =
-    trpc.routes.global.getCategories.getCategories.useQuery();
+  const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const handleSubmitForm = async (data: any) => {
     const res = await editProductMutation.mutateAsync({
       id: String(searchParams.get('id')),
