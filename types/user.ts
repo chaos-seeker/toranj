@@ -6,4 +6,5 @@ export type TUser = {
   email: string;
   address: string;
   role: 'USER' | 'ADMIN';
+  createdAt?: Date;
 };

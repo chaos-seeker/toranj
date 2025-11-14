@@ -6,6 +6,7 @@ import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { cn } from '@/utils/cn';
+import type { TUser } from '@/types/user';
 
 export function List() {
   const fetchUsers = trpc.routes.dashboard.users.getUsers.useQuery();
@@ -83,65 +84,51 @@ export function List() {
             </tr>
           </thead>
           <tbody>
-            {fetchUsers.data?.map(
-              (
-                item: {
-                  _id: string;
-                  name: string;
-                  lastName: string;
-                  phone: string;
-                  email: string;
-                  address: string;
-                  role: string;
-                  createdAt: Date;
-                },
-                index: number,
-              ) => (
-                <tr key={item._id} className="odd:bg-gray-50">
-                  <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.lastName}</td>
-                  <td>{item.phone}</td>
-                  <td>{item.email}</td>
-                  <td>{item.address}</td>
-                  <td className="m-2 flex w-fit gap-2 rounded-md border border-teal !p-1">
-                    <button
-                      className={cn({
-                        'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
-                          item.role.toLocaleLowerCase() === 'user',
-                      })}
-                      onClick={() =>
-                        handleChangeUserRole({
-                          id: item._id,
-                          role: 'user',
-                        })
-                      }
-                    >
-                      user
-                    </button>
-                    <button
-                      className={cn({
-                        'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
-                          item.role.toLocaleLowerCase() === 'admin',
-                      })}
-                      onClick={() =>
-                        handleChangeUserRole({
-                          id: item._id,
-                          role: 'admin',
-                        })
-                      }
-                    >
-                      admin
-                    </button>
-                  </td>
-                  <td className="text-right">
-                    <button onClick={() => handleDeleteUser(item._id)}>
-                      <IoMdTrash size={22} />
-                    </button>
-                  </td>
-                </tr>
-              ),
-            )}
+            {fetchUsers.data?.map((item: TUser, index: number) => (
+              <tr key={item._id} className="odd:bg-gray-50">
+                <td>{index + 1}</td>
+                <td>{item.name}</td>
+                <td>{item.lastName}</td>
+                <td>{item.phone}</td>
+                <td>{item.email}</td>
+                <td>{item.address}</td>
+                <td className="m-2 flex w-fit gap-2 rounded-md border border-teal !p-1">
+                  <button
+                    className={cn({
+                      'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
+                        item.role.toLocaleLowerCase() === 'user',
+                    })}
+                    onClick={() =>
+                      handleChangeUserRole({
+                        id: item._id,
+                        role: 'user',
+                      })
+                    }
+                  >
+                    user
+                  </button>
+                  <button
+                    className={cn({
+                      'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
+                        item.role.toLocaleLowerCase() === 'admin',
+                    })}
+                    onClick={() =>
+                      handleChangeUserRole({
+                        id: item._id,
+                        role: 'admin',
+                      })
+                    }
+                  >
+                    admin
+                  </button>
+                </td>
+                <td className="text-right">
+                  <button onClick={() => handleDeleteUser(item._id)}>
+                    <IoMdTrash size={22} />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

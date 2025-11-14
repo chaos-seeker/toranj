@@ -11,6 +11,7 @@ import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
+import type { TCategory } from '@/types/category';
 
 export function ModalEditProduct() {
   const editProductToggleUrlState = useToggleUrlState('edit-product');
@@ -132,12 +133,10 @@ export function ModalEditProduct() {
     }
   };
   if (fetchCategories.isSuccess) {
-    formFields.category.data = fetchCategories.data?.map(
-      (item: { _id: string; title: string; image: { path: string } }) => ({
-        key: item.title,
-        value: item._id,
-      }),
-    );
+    formFields.category.data = fetchCategories.data?.map((item: TCategory) => ({
+      key: item.title,
+      value: item._id,
+    }));
   }
 
   // auto fill form

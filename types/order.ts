@@ -1,9 +1,10 @@
 import { TProduct } from './product';
 
 export type TOrder = {
+  _id: string;
   products: {
     productID: TProduct;
-    quantity: 11;
+    quantity: number;
   }[];
   userID: {
     name: string;
@@ -12,4 +13,6 @@ export type TOrder = {
     email: string;
     address: string;
   };
+  status: string;
+  createdAt: Date;
 };

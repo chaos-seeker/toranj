@@ -9,6 +9,8 @@ import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { ProductCard } from '@/components/product-card';
 import { cn } from '@/utils/cn';
+import type { TCategory } from '@/types/category';
+import type { TProduct } from '@/types/product';
 
 export function Categories() {
   const [activedIndex, setActivedIndex] = useState(0);
@@ -52,39 +54,34 @@ const Top = (props: ITopProps) => {
         onSwiper={(swiper) => (props.swiperRef.current = swiper)}
         id="categories-slider"
       >
-        {fetchCategories.data?.map(
-          (
-            item: { _id: string; title: string; image: { path: string } },
-            index: number,
-          ) => (
-            <SwiperSlide key={item._id} className="!w-fit rounded-lg">
-              <button
-                onClick={() => handleActiveCategory(index)}
-                className={cn(
-                  'rounded-xl border transition-all w-[100px] overflow-hidden bg-white p-1.5',
-                  {
-                    'bg-green font-bold': props.activedIndex === index,
-                  },
-                )}
+        {fetchCategories.data?.map((item: TCategory, index: number) => (
+          <SwiperSlide key={item._id} className="!w-fit rounded-lg">
+            <button
+              onClick={() => handleActiveCategory(index)}
+              className={cn(
+                'rounded-xl border transition-all w-[100px] overflow-hidden bg-white p-1.5',
+                {
+                  'bg-green font-bold': props.activedIndex === index,
+                },
+              )}
+            >
+              <div
+                className={cn('flex flex-col gap-2 p-1 items-center', {
+                  'border-dashed border-2 border-teal rounded-lg':
+                    props.activedIndex === index,
+                })}
               >
-                <div
-                  className={cn('flex flex-col gap-2 p-1 items-center', {
-                    'border-dashed border-2 border-teal rounded-lg':
-                      props.activedIndex === index,
-                  })}
-                >
-                  <Image
-                    src={`${process.env.BASE_URL}${item.image.path}`}
-                    alt={item.title}
-                    width={50}
-                    height={50}
-                  />
-                  <p>{item.title}</p>
-                </div>
-              </button>
-            </SwiperSlide>
-          ),
-        )}
+                <Image
+                  src={`${process.env.BASE_URL}${item.image.path}`}
+                  alt={item.title}
+                  width={50}
+                  height={50}
+                />
+                <p>{item.title}</p>
+              </div>
+            </button>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );
@@ -121,19 +118,9 @@ const Bottom = (props: IBottomProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {fetchProductsByCategory.data?.map(
-        (item: {
-          _id: string;
-          title: string;
-          description: string;
-          image: { path: string };
-          priceWithoutDiscount: number;
-          priceWithDiscount: number;
-          categoryID: string;
-        }) => (
-          <ProductCard key={item._id} data={item} />
-        ),
-      )}
+      {fetchProductsByCategory.data?.map((item: TProduct) => (
+        <ProductCard key={item._id} data={item} />
+      ))}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { formatPrice } from '@/utils/format-price';
+import type { TProduct } from '@/types/product';
 
 export function List() {
   const fetchProducts = trpc.routes.global.getProducts.useQuery();
@@ -86,64 +87,51 @@ export function List() {
                 </tr>
               </thead>
               <tbody>
-                {fetchProducts.data?.map(
-                  (
-                    item: {
-                      _id: string;
-                      title: string;
-                      description: string;
-                      image: { path: string };
-                      priceWithoutDiscount: number;
-                      priceWithDiscount: number;
-                      categoryID: string;
-                    },
-                    index: number,
-                  ) => (
-                    <tr key={item._id} className="odd:bg-gray-50">
-                      <td>{index + 1}</td>
-                      <td className="text-center">
-                        <Image
-                          src={`${process.env.BASE_URL}${item.image.path}`}
-                          alt={item.title}
-                          width={60}
-                          height={60}
-                        />
-                      </td>
-                      <td className="max-w-[150px] truncate text-right">
-                        {item.title}
-                      </td>
-                      <td className="max-w-[200px] truncate text-right">
-                        {item.description}
-                      </td>
-                      <td>{formatPrice(item.priceWithDiscount)}</td>
-                      <td>{formatPrice(item.priceWithoutDiscount)}</td>
-                      <td className=" text-right">
-                        <button
-                          onClick={() =>
-                            handleShowModalEditProduct({
-                              title: item.title,
-                              description: item.description,
-                              priceWithDiscount: item.priceWithDiscount,
-                              priceWithoutDiscount: item.priceWithoutDiscount,
-                              category: item.categoryID,
-                              id: item._id,
-                              image: `${process.env.BASE_URL}${item.image.path}`,
-                            })
-                          }
-                          className="mx-2"
-                        >
-                          <MdEdit size={22} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(item._id)}
-                          className="mx-2"
-                        >
-                          <IoMdTrash size={22} />
-                        </button>
-                      </td>
-                    </tr>
-                  ),
-                )}
+                {fetchProducts.data?.map((item: TProduct, index: number) => (
+                  <tr key={item._id} className="odd:bg-gray-50">
+                    <td>{index + 1}</td>
+                    <td className="text-center">
+                      <Image
+                        src={`${process.env.BASE_URL}${item.image.path}`}
+                        alt={item.title}
+                        width={60}
+                        height={60}
+                      />
+                    </td>
+                    <td className="max-w-[150px] truncate text-right">
+                      {item.title}
+                    </td>
+                    <td className="max-w-[200px] truncate text-right">
+                      {item.description}
+                    </td>
+                    <td>{formatPrice(item.priceWithDiscount)}</td>
+                    <td>{formatPrice(item.priceWithoutDiscount)}</td>
+                    <td className=" text-right">
+                      <button
+                        onClick={() =>
+                          handleShowModalEditProduct({
+                            title: item.title,
+                            description: item.description,
+                            priceWithDiscount: item.priceWithDiscount,
+                            priceWithoutDiscount: item.priceWithoutDiscount,
+                            category: item.categoryID,
+                            id: item._id,
+                            image: `${process.env.BASE_URL}${item.image.path}`,
+                          })
+                        }
+                        className="mx-2"
+                      >
+                        <MdEdit size={22} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(item._id)}
+                        className="mx-2"
+                      >
+                        <IoMdTrash size={22} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

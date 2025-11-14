@@ -8,6 +8,7 @@ import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
+import type { TCategory } from '@/types/category';
 
 export function List() {
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
@@ -70,47 +71,42 @@ export function List() {
               </tr>
             </thead>
             <tbody>
-              {fetchCategories.data?.map(
-                (
-                  item: { _id: string; title: string; image: { path: string } },
-                  index: number,
-                ) => (
-                  <tr key={item._id} className="even:bg-gray-50">
-                    <td>{index + 1}</td>
-                    <td className="text-center">
-                      <Image
-                        src={`${process.env.BASE_URL}${item.image.path}`}
-                        alt={item.title}
-                        width={50}
-                        height={50}
-                      />
-                    </td>
-                    <td className="max-w-[150px] truncate text-right">
-                      {item.title}
-                    </td>
-                    <td className="text-right">
-                      <button
-                        onClick={() =>
-                          handleShowModalEditCategory({
-                            title: item.title,
-                            image: item.image,
-                            id: item._id,
-                          })
-                        }
-                        className="mx-2"
-                      >
-                        <MdEdit size={22} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCategory(item._id)}
-                        className="mx-2"
-                      >
-                        <IoMdTrash size={22} />
-                      </button>
-                    </td>
-                  </tr>
-                ),
-              )}
+              {fetchCategories.data?.map((item: TCategory, index: number) => (
+                <tr key={item._id} className="even:bg-gray-50">
+                  <td>{index + 1}</td>
+                  <td className="text-center">
+                    <Image
+                      src={`${process.env.BASE_URL}${item.image.path}`}
+                      alt={item.title}
+                      width={50}
+                      height={50}
+                    />
+                  </td>
+                  <td className="max-w-[150px] truncate text-right">
+                    {item.title}
+                  </td>
+                  <td className="text-right">
+                    <button
+                      onClick={() =>
+                        handleShowModalEditCategory({
+                          title: item.title,
+                          image: item.image,
+                          id: item._id,
+                        })
+                      }
+                      className="mx-2"
+                    >
+                      <MdEdit size={22} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategory(item._id)}
+                      className="mx-2"
+                    >
+                      <IoMdTrash size={22} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         ) : (

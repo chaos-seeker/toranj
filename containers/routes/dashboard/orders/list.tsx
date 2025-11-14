@@ -4,6 +4,7 @@ import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
+import type { TOrder } from '@/types/order';
 
 export function List() {
   const fetchClientOrders =
@@ -54,46 +55,8 @@ export function List() {
           </thead>
           <tbody>
             {fetchClientOrders.data?.map(
-              (
-                itemOrder: {
-                  _id: string;
-                  products: Array<{
-                    productID: {
-                      _id: string;
-                      title: string;
-                      description: string;
-                      image: { path: string };
-                      priceWithoutDiscount: number;
-                      priceWithDiscount: number;
-                      categoryID: string;
-                    };
-                    quantity: number;
-                  }>;
-                  userID: {
-                    name: string;
-                    lastName: string;
-                    phone: string;
-                    email: string;
-                    address: string;
-                  };
-                  status: string;
-                  createdAt: Date;
-                },
-                index: number,
-              ) =>
-                itemOrder.products.map(
-                  (itemProduct: {
-                    productID: {
-                      _id: string;
-                      title: string;
-                      description: string;
-                      image: { path: string };
-                      priceWithoutDiscount: number;
-                      priceWithDiscount: number;
-                      categoryID: string;
-                    };
-                    quantity: number;
-                  }) => (
+              (itemOrder: TOrder, index: number) =>
+                itemOrder.products.map((itemProduct) => (
                     <tr
                       key={itemProduct.productID._id}
                       className="even:bg-gray-50"
