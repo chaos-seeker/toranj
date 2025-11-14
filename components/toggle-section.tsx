@@ -1,4 +1,6 @@
-import { ReactNode } from 'react';
+'use client';
+
+import { ReactNode, useEffect } from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { cn } from '@/utils/cn';
 
@@ -11,9 +13,25 @@ interface IToggleSectionProps {
 }
 
 export function ToggleSection(props: IToggleSectionProps) {
+  useEffect(() => {
+    if (props.isShow && props.isBackDrop) {
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [props.isShow, props.isBackDrop]);
+
   return (
     <section>
-      {/* backdrop */}
       <button
         onClick={() => props.onClose()}
         className={cn('fixed inset-0 z-40 transition-all', {
@@ -23,7 +41,6 @@ export function ToggleSection(props: IToggleSectionProps) {
           hidden: !props.isBackDrop,
         })}
       />
-      {/* section */}
       <div
         className={cn('transition-all relative z-50', props.className, {
           show: props.isShow,
@@ -32,7 +49,6 @@ export function ToggleSection(props: IToggleSectionProps) {
       >
         <div className="container">
           <div className="rounded-md border border-gray-200 bg-white">
-            {/* head */}
             <div className="absolute -top-10 right-2.5 flex p-1">
               <button
                 onClick={() => {
@@ -43,7 +59,6 @@ export function ToggleSection(props: IToggleSectionProps) {
                 <HiMiniXMark size={24} className="fill-white" />
               </button>
             </div>
-            {/* body */}
             <div>{props.children}</div>
           </div>
         </div>

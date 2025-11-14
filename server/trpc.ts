@@ -51,7 +51,6 @@ export const adminProcedure = t.procedure.use(async (opts) => {
   if (!user) {
     throw new Error('دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید');
   }
-  // Since we don't have role anymore, adminProcedure is same as protectedProcedure
   return opts.next({
     ctx: {
       ...opts.ctx,

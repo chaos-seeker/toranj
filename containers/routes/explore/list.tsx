@@ -4,6 +4,7 @@ import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { ProductCard } from '@/components/product-card';
+import { TProduct } from '@/types/product';
 
 export function List() {
   const fetchProducts = trpc.routes.global.getProducts.useQuery();
@@ -18,7 +19,7 @@ export function List() {
 
   return (
     <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {fetchProducts.data?.map((item) => (
+      {fetchProducts.data?.map((item: TProduct) => (
         <ProductCard key={item._id} data={item} />
       ))}
     </section>

@@ -18,7 +18,6 @@ export function ModalRegister() {
     registerToggleUrlState.hide();
   };
 
-  // form
   const formFields = {
     fullName: {
       label: 'نام و نام خانوادگی',

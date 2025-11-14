@@ -53,7 +53,6 @@ export function ProductCard({ data }: IProductCardProps) {
         key={data._id}
         className="group relative flex flex-col justify-between rounded-xl border bg-white p-3"
       >
-        {/* image / title / description */}
         <div className="flex gap-5">
           <Image src={data.image} alt={data.title} width={100} height={100} />
           <div className="flex flex-col gap-2">
@@ -65,7 +64,6 @@ export function ProductCard({ data }: IProductCardProps) {
             </p>
           </div>
         </div>
-        {/* like / see */}
         <div className="absolute left-2 top-3 flex flex-col gap-1">
           <button onClick={handleToggleFavorite}>
             {localstorageFavorite.selectors.isInFavorites(data._id) ? (
@@ -78,9 +76,7 @@ export function ProductCard({ data }: IProductCardProps) {
             <IoEyeOutline size={22} className="stroke-gray-400" />
           </button>
         </div>
-        {/* cart actions / price */}
         <div className="mt-3 flex items-end justify-between border-t-2 border-dashed pt-3">
-          {/* cart */}
           <div>
             {localstorageCart.selectors.isInCart(data) ? (
               <div className="flex h-10 w-24 items-center gap-5 rounded-lg border bg-gray px-3">
@@ -105,7 +101,6 @@ export function ProductCard({ data }: IProductCardProps) {
               </button>
             )}
           </div>
-          {/* cart actions */}
           <div>
             <div
               className={cn('flex gap-2', {

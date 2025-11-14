@@ -20,7 +20,6 @@ export const getClientOrders = protectedProcedure.query(async ({ ctx }) => {
     },
   });
 
-  // Fetch all products for all orders
   const allProductIds = new Set<string>();
   orders.forEach((order: any) => {
     const products = order.products as any[];

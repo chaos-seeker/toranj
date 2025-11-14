@@ -18,7 +18,6 @@ export function ModalLogin() {
     loginToggleUrlState.hide();
   };
 
-  // form
   const formFields = {
     phoneNumber: {
       type: 'number',

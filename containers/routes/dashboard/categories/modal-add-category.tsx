@@ -19,7 +19,6 @@ export function ModalAddCategory() {
   };
   const utils = trpc.useUtils();
 
-  // form
   const formFields = {
     title: {
       type: 'text',

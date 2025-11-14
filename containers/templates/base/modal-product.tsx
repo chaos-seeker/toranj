@@ -43,7 +43,6 @@ export function ModalProduct({ data, isShow, onClose }: IModalProductProps) {
       className="fixed left-1/2 top-1/2 w-[350px] -translate-x-1/2 -translate-y-1/2 sm:w-[500px]"
     >
       <div className="relative flex flex-col items-center gap-3 p-3">
-        {/* image */}
         <Image
           src={data.image}
           alt={data.title}
@@ -51,7 +50,6 @@ export function ModalProduct({ data, isShow, onClose }: IModalProductProps) {
           height={130}
           className="sm:size-[150px]"
         />
-        {/* like */}
         <button
           onClick={handleToggleFavorite}
           className="absolute left-3 top-3"
@@ -62,15 +60,12 @@ export function ModalProduct({ data, isShow, onClose }: IModalProductProps) {
             <IoMdHeartEmpty size={25} className="fill-gray-400" />
           )}
         </button>
-        {/* title */}
         <p className="font-bold sm:text-lg">{data.title}</p>
-        {/* description */}
         <p className="text-center text-sm text-gray-500 sm:text-smp">
           {data.description}
         </p>
         <hr className="w-full" />
         <div className="flex w-full items-center justify-between">
-          {/* cart action */}
           <div>
             {localstorageCart.selectors.isInCart(data) ? (
               <div className="flex h-10 w-24 items-center gap-5 rounded-lg border bg-gray px-3">
@@ -95,7 +90,6 @@ export function ModalProduct({ data, isShow, onClose }: IModalProductProps) {
               </button>
             )}
           </div>
-          {/* price */}
           <div>
             <div
               className={cn('flex gap-2', {

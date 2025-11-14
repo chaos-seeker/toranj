@@ -35,7 +35,6 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
     onClose?.();
   };
 
-  // form
   const formFields = {
     title: {
       type: 'text',
@@ -162,7 +161,6 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
     }));
   }
 
-  // auto fill form
   useEffect(() => {
     if (editProductToggleUrlState.isShow && data) {
       form.reset({
@@ -188,13 +186,11 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
           onSubmit={form.handleSubmit(handleSubmitForm)}
           className="flex w-full flex-col p-3"
         >
-          {/* fields */}
           <div className="mb-4 mt-2 flex flex-col gap-2">
             {Object.entries(formFields).map(([key, field]) => (
               <Feild name={key} key={key} field={field} form={form} />
             ))}
           </div>
-          {/* submit */}
           <button
             type="submit"
             disabled={editProductMutation.isPending}

@@ -9,7 +9,6 @@ export async function proxy(request: NextRequest) {
   const cookieStore = await cookies();
   const isAuth = Boolean(cookieStore.get('token')?.value);
 
-  // if user is-not logged-in && route is-protected ===> redirect to the `/` page with query 'toggle-login=true
   if (
     logginedRoutes.some((item) => request.nextUrl.pathname.startsWith(item)) &&
     !isAuth

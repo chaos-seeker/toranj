@@ -19,12 +19,10 @@ export async function fetcher<T>(params: IParams): Promise<TReturn<T>> {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
 
-  // set authorization header if token exists
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // set content-Type / set body data
   if (params.contentType === 'json') {
     headers['Content-Type'] = 'application/json';
     bodyData = params.body ? JSON.stringify(params.body) : undefined;
@@ -46,7 +44,7 @@ export async function fetcher<T>(params: IParams): Promise<TReturn<T>> {
       status: response.status,
       statusText: response.statusText,
       url: response.url,
-      body: await response.text(), // Log the response body for debugging
+      body: await response.text(),
     });
   }
 

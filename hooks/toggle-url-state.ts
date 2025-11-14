@@ -19,33 +19,28 @@ export function useToggleUrlState(key: string) {
   ) => {
     const updatedSearchParams = new URLSearchParams(searchParams.toString());
 
-    // remove all existing toggle-* keys
     Array.from(updatedSearchParams.keys()).forEach((paramKey) => {
       if (paramKey.startsWith('toggle-')) {
         updatedSearchParams.delete(paramKey);
       }
     });
 
-    // remove specific keys if provided
     if (keysToRemove) {
       keysToRemove.forEach((key) => {
         updatedSearchParams.delete(key);
       });
     }
 
-    // add the prefixed key if newState is true
     if (newState) {
       updatedSearchParams.set(prefixedKey, 'true');
     }
 
-    // add additional query parameters if provided
     if (additionalParams) {
       Object.entries(additionalParams).forEach(([key, value]) => {
         updatedSearchParams.set(key, value);
       });
     }
 
-    // update the URL
     router.push(`${pathname}?${updatedSearchParams.toString()}`, {
       scroll: false,
     });

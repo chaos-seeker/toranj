@@ -20,7 +20,6 @@ export function ModalAddProduct() {
     form.reset();
   };
 
-  // form
   const formFields = {
     title: {
       type: 'text',

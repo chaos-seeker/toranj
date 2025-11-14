@@ -9,7 +9,6 @@ import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 
 export function EditForm() {
-  // form
   const formFields = {
     fullName: {
       label: 'نام و نام خانوادگی',

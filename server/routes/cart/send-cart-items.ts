@@ -29,7 +29,6 @@ export const sendCartItems = protectedProcedure
       };
     }
 
-    // Store products as JSON: [{ productId: string, quantity: number }]
     const productsData = input.items.map((item) => ({
       productId: item.productID,
       quantity: item.quantity,
@@ -51,8 +50,6 @@ export const sendCartItems = protectedProcedure
         },
       },
     });
-
-    // Fetch products to return full product data
     const allProducts = await ctx.prisma.product.findMany({
       where: {
         id: {

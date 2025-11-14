@@ -41,7 +41,6 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
 
     if (!user) return null;
 
-    // Fetch all products for all orders
     const allProductIds = new Set<string>();
     user.orders.forEach((order: any) => {
       const products = order.products as any[];
