@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 const logginedRoutes = ['/profile', '/dashboard', '/orders'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const headers = new Headers(request.headers);
   const cookieStore = await cookies();
   const isAuth = Boolean(cookieStore.get('token')?.value);
