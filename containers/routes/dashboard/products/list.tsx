@@ -36,6 +36,10 @@ export function List() {
     });
   };
 
+  if (fetchProducts.isLoading) {
+    return <Loader />;
+  }
+
   const handleDeleteProduct = async (id: string) => {
     const res = await deleteProductMutation.mutateAsync({ id });
     if (res.status === 'success') {
@@ -44,10 +48,6 @@ export function List() {
       toast.error(res.message);
     }
   };
-
-  if (fetchProducts.isLoading || deleteProductMutation.isPending) {
-    return <Loader />;
-  }
 
   return (
     <section className="flex size-full flex-col gap-3 overflow-hidden">
@@ -60,7 +60,7 @@ export function List() {
       </button>
       {/* table */}
       <div className="relative flex size-full h-fit flex-col overflow-auto rounded-xl border border-teal/20 bg-white bg-clip-border text-gray-600">
-        {fetchProducts.data?.length !== 0 && fetchProducts.data ? (
+        {fetchProducts.data && fetchProducts.data.length > 0 ? (
           <div>
             <table className="w-full min-w-max table-auto text-right text-sm [&_td]:px-4 [&_td]:py-1 [&_th]:border-b [&_th]:border-gray-200 [&_th]:p-4 [&_th_p]:block [&_th_p]:text-sm [&_th_p]:font-medium [&_th_p]:leading-none [&_th_p]:antialiased">
               <thead className="bg-gray-200">
@@ -87,7 +87,7 @@ export function List() {
                 </tr>
               </thead>
               <tbody>
-                {fetchProducts.data?.map((item: TProduct, index: number) => (
+                {fetchProducts.data.map((item: TProduct, index: number) => (
                   <tr key={item._id} className="odd:bg-gray-50">
                     <td>{index + 1}</td>
                     <td className="text-center">

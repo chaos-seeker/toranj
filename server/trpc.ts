@@ -35,10 +35,7 @@ const getUserFromToken = async (): Promise<{
 export const protectedProcedure = t.procedure.use(async (opts) => {
   const user = await getUserFromToken();
   if (!user) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید',
-    });
+    throw new Error('دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید');
   }
   return opts.next({
     ctx: {
@@ -52,10 +49,7 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
 export const adminProcedure = t.procedure.use(async (opts) => {
   const user = await getUserFromToken();
   if (!user) {
-    throw new TRPCError({
-      code: 'UNAUTHORIZED',
-      message: 'دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید',
-    });
+    throw new Error('دسترسی غیرمجاز - لطفا وارد حساب کاربری خود شوید');
   }
   // Since we don't have role anymore, adminProcedure is same as protectedProcedure
   return opts.next({

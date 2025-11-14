@@ -12,7 +12,7 @@ export function List() {
     return <Loader />;
   }
 
-  if (fetchProducts.data?.length === 0) {
+  if (fetchProducts.data?.length === 0 || !fetchProducts.data) {
     return <Empty text="محصولی برای نمایش وجود ندارد!" />;
   }
 

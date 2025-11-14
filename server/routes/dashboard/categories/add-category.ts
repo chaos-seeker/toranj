@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { adminProcedure } from '@/server/trpc';
+import { publicProcedure } from '@/server/trpc';
 
-export const addCategory = adminProcedure
+export const addCategory = publicProcedure
   .input(
     z.object({
       title: z.string().min(1),
@@ -11,7 +11,7 @@ export const addCategory = adminProcedure
   .mutation(async ({ input, ctx }) => {
     const category = await ctx.prisma.category.create({
       data: {
-        name: input.title,
+        title: input.title,
         image: input.imagePath,
       },
     });
@@ -21,7 +21,7 @@ export const addCategory = adminProcedure
       status: 'success' as const,
       category: {
         id: category.id,
-        title: category.name,
+        title: category.title,
         image: category.image,
       },
     };

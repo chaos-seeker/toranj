@@ -42,7 +42,11 @@ const Top = (props: ITopProps) => {
   };
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
 
-  if (fetchCategories.data?.length === 0) {
+  if (fetchCategories.isLoading) {
+    return <Loader />;
+  }
+
+  if (fetchCategories.data?.length === 0 || !fetchCategories.data) {
     return <Empty text="دسته بندی ای برای نمایش وجود ندارد!" />;
   }
 
@@ -72,7 +76,7 @@ const Top = (props: ITopProps) => {
                 })}
               >
                 <Image
-                  src={`${process.env.BASE_URL}${item.image}`}
+                  src={item.image}
                   alt={item.title}
                   width={50}
                   height={50}

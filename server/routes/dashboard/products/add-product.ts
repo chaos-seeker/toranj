@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { adminProcedure } from '@/server/trpc';
+import { publicProcedure } from '@/server/trpc';
 
-export const addProduct = adminProcedure
+export const addProduct = publicProcedure
   .input(
     z.object({
       title: z.string().min(1),

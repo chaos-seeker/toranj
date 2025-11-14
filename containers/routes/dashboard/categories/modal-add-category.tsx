@@ -9,6 +9,7 @@ import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
+import { fileToBase64 } from '@/utils/file-to-base64';
 
 export function ModalAddCategory() {
   const addCategoryToggleUrlState = useToggleUrlState('add-category');
@@ -57,9 +58,13 @@ export function ModalAddCategory() {
       },
     });
   const handleSubmitForm = async (data: any) => {
+    let imageBase64 = '';
+    if (data.image[0]) {
+      imageBase64 = await fileToBase64(data.image[0]);
+    }
     const res = await addCategoryMutation.mutateAsync({
       title: data.title,
-      imagePath: data.image[0] ? URL.createObjectURL(data.image[0]) : '',
+      imagePath: imageBase64,
     });
     if (res.status === 'success') {
       toast.success(res.message);

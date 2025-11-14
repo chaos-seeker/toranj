@@ -16,7 +16,7 @@ export function List() {
   }
 
   if (fetchClientOrders.data?.length === 0 || !fetchClientOrders.data) {
-    return <Empty text="سفارشی وجود ندارد" />;
+    return <Empty text="سفارشی برای نمایش وجود ندارد!" />;
   }
 
   return (

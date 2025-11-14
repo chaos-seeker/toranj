@@ -9,7 +9,7 @@ export const getCategories = publicProcedure.query(async ({ ctx }) => {
 
   return categories.map((category: any) => ({
     id: category.id,
-    title: category.name,
+    title: category.title,
     image: category.image,
   }));
 });

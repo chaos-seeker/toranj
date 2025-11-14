@@ -1,16 +1,9 @@
 import { z } from 'zod';
-import { adminProcedure } from '@/server/trpc';
+import { publicProcedure } from '@/server/trpc';
 
-export const deleteUser = adminProcedure
+export const deleteUser = publicProcedure
   .input(z.object({ id: z.string().min(1) }))
   .mutation(async ({ input, ctx }) => {
-    if (input.id === ctx.userId) {
-      return {
-        message: 'نمی‌توانید حساب کاربری خود را حذف کنید',
-        status: 'fail' as const,
-      };
-    }
-
     const user = await ctx.prisma.user.findUnique({
       where: { id: input.id },
     });

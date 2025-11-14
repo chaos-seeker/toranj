@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { adminProcedure } from '@/server/trpc';
+import { publicProcedure } from '@/server/trpc';
 
-export const editCategory = adminProcedure
+export const editCategory = publicProcedure
   .input(
     z.object({
       id: z.string().min(1),
@@ -24,11 +24,11 @@ export const editCategory = adminProcedure
     }
 
     const updateData: {
-      name?: string;
+      title?: string;
       image?: string;
     } = {};
 
-    if (inputData.title) updateData.name = inputData.title;
+    if (inputData.title) updateData.title = inputData.title;
     if (inputData.imagePath) updateData.image = inputData.imagePath;
 
     const updatedCategory = await ctx.prisma.category.update({
@@ -41,7 +41,7 @@ export const editCategory = adminProcedure
       status: 'success' as const,
       category: {
         id: updatedCategory.id,
-        title: updatedCategory.name,
+        title: updatedCategory.title,
         image: updatedCategory.image,
       },
     };

@@ -9,6 +9,7 @@ import { trpc } from '@/lib/trpc';
 import { Feild } from '@/components/feild';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
+import { fileToBase64 } from '@/utils/file-to-base64';
 import type { TCategory } from '@/types/category';
 
 export function ModalAddProduct() {
@@ -104,13 +105,17 @@ export function ModalAddProduct() {
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const handleSubmitForm = async (data: any) => {
+    let imageBase64 = '';
+    if (data.image[0]) {
+      imageBase64 = await fileToBase64(data.image[0]);
+    }
     const res = await addProductMutation.mutateAsync({
       title: data.title,
       description: data.description,
       priceWithoutDiscount: Number(data.priceWithoutDiscount),
       priceWithDiscount: Number(data.priceWithDiscount),
       categoryId: data.category,
-      imagePath: data.image[0] ? URL.createObjectURL(data.image[0]) : '',
+      imagePath: imageBase64,
     });
     if (res.status === 'success') {
       toast.success(res.message);

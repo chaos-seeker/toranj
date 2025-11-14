@@ -60,8 +60,8 @@ export function List() {
                 >
                   <td>{orderIndex + 1}</td>
                   <td className="text-center">
-                      <Image
-                        src={product.image}
+                    <Image
+                      src={product.image}
                       alt={product.title}
                       width={50}
                       height={50}

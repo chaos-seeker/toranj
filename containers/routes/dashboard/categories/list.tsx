@@ -54,7 +54,7 @@ export function List() {
       </button>
       {/* table */}
       <div className="relative flex size-full h-fit flex-col overflow-auto rounded-xl border border-teal/20 bg-white bg-clip-border text-gray-600">
-        {fetchCategories.data?.length !== 0 && fetchCategories.data ? (
+        {fetchCategories.data && fetchCategories.data.length > 0 ? (
           <table className="w-full min-w-max table-auto text-right text-sm [&_td]:px-4 [&_td]:py-1 [&_th]:border-b [&_th]:border-gray-200 [&_th]:p-4 [&_th_p]:block [&_th_p]:text-sm [&_th_p]:font-medium [&_th_p]:leading-none [&_th_p]:antialiased">
             <thead className="bg-gray-200">
               <tr>
@@ -71,7 +71,7 @@ export function List() {
               </tr>
             </thead>
             <tbody>
-              {fetchCategories.data?.map((item: TCategory, index: number) => (
+              {fetchCategories.data.map((item: TCategory, index: number) => (
                 <tr key={item.id} className="even:bg-gray-50">
                   <td>{index + 1}</td>
                   <td className="text-center">
