@@ -11,8 +11,8 @@ export const addCategory = adminProcedure
   .mutation(async ({ input, ctx }) => {
     const category = await ctx.prisma.category.create({
       data: {
-        title: input.title,
-        imagePath: input.imagePath,
+        name: input.title,
+        image: input.imagePath,
       },
     });
 
@@ -20,11 +20,9 @@ export const addCategory = adminProcedure
       message: 'دسته‌بندی با موفقیت اضافه شد',
       status: 'success' as const,
       category: {
-        _id: category.id,
-        title: category.title,
-        image: {
-          path: category.imagePath,
-        },
+        id: category.id,
+        title: category.name,
+        image: category.image,
       },
     };
   });

@@ -39,7 +39,6 @@ export const sendCartItems = protectedProcedure
     const order = await ctx.prisma.order.create({
       data: {
         userId: ctx.userId!,
-        status: 'PENDING',
         items: {
           create: input.items.map((item) => ({
             productId: item.productID,
@@ -55,7 +54,7 @@ export const sendCartItems = protectedProcedure
                 category: {
                   select: {
                     id: true,
-                    title: true,
+                    name: true,
                   },
                 },
               },
@@ -65,10 +64,8 @@ export const sendCartItems = protectedProcedure
         user: {
           select: {
             id: true,
-            name: true,
-            lastName: true,
+            fullName: true,
             phone: true,
-            email: true,
             address: true,
           },
         },
@@ -79,14 +76,14 @@ export const sendCartItems = protectedProcedure
       message: 'سفارش با موفقیت ایجاد شد',
       status: 'success' as const,
       order: {
-        _id: order.id,
+        id: order.id,
         products: order.items.map((item: any) => ({
           productID: {
             _id: item.product.id,
             title: item.product.title,
             description: item.product.description,
             image: {
-              path: item.product.imagePath,
+              path: item.product.image,
             },
             priceWithoutDiscount: item.product.priceWithoutDiscount,
             priceWithDiscount: item.product.priceWithDiscount,
@@ -94,14 +91,12 @@ export const sendCartItems = protectedProcedure
           },
           quantity: item.quantity,
         })),
-        userID: {
-          name: order.user.name,
-          lastName: order.user.lastName,
-          phone: order.user.phone,
-          email: order.user.email,
+        user: {
+          id: order.user.id,
+          fullName: order.user.fullName,
+          phoneNumber: order.user.phone,
           address: order.user.address,
         },
-        status: order.status,
         createdAt: order.createdAt,
       },
     };

@@ -13,7 +13,6 @@ import { editProduct } from './routes/dashboard/products/edit-product';
 import { deleteProduct } from './routes/dashboard/products/delete-product';
 import { getUsers } from './routes/dashboard/users/get-users';
 import { deleteUser } from './routes/dashboard/users/delete-user';
-import { changeUserRole } from './routes/dashboard/users/change-user-role';
 import { getCategories } from './routes/global/get-categories';
 import { getProducts } from './routes/global/get-products';
 import { getProductByCategoryId } from './routes/home/get-product-by-category-id';
@@ -50,7 +49,6 @@ export const appRouter = router({
       users: router({
         getUsers,
         deleteUser,
-        changeUserRole,
       }),
     }),
     global: router({

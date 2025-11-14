@@ -10,7 +10,7 @@ export const editCategory = adminProcedure
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    const { id, ...updateData } = input;
+    const { id, ...inputData } = input;
 
     const category = await ctx.prisma.category.findUnique({
       where: { id },
@@ -23,6 +23,14 @@ export const editCategory = adminProcedure
       };
     }
 
+    const updateData: {
+      name?: string;
+      image?: string;
+    } = {};
+
+    if (inputData.title) updateData.name = inputData.title;
+    if (inputData.imagePath) updateData.image = inputData.imagePath;
+
     const updatedCategory = await ctx.prisma.category.update({
       where: { id },
       data: updateData,
@@ -32,11 +40,9 @@ export const editCategory = adminProcedure
       message: 'دسته‌بندی با موفقیت به‌روزرسانی شد',
       status: 'success' as const,
       category: {
-        _id: updatedCategory.id,
-        title: updatedCategory.title,
-        image: {
-          path: updatedCategory.imagePath,
-        },
+        id: updatedCategory.id,
+        title: updatedCategory.name,
+        image: updatedCategory.image,
       },
     };
   });

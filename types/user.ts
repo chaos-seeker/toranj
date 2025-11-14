@@ -1,10 +1,9 @@
+import { TOrder } from './order';
+
 export type TUser = {
-  _id: string;
-  name: string;
-  lastName: string;
-  phone: string;
-  email: string;
+  id: string;
+  fullName: string;
+  phoneNumber: string;
   address: string;
-  role: 'USER' | 'ADMIN';
-  createdAt?: Date;
+  orders: TOrder[];
 };

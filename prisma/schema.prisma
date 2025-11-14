@@ -15,13 +15,10 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid())
-  name      String
-  lastName  String
+  fullName  String
   phone     String   @unique
-  email     String   @unique
   password  String
   address   String
-  role      Role     @default(USER)
   orders    Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,8 +28,8 @@ model User {
 
 model Category {
   id        String    @id @default(cuid())
-  title     String
-  imagePath String
+  name     String
+  image String
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -44,7 +41,7 @@ model Product {
   id                  String      @id @default(cuid())
   title               String
   description         String
-  imagePath           String
+  image          String
   priceWithoutDiscount Float
   priceWithDiscount   Float
   categoryId          String
@@ -61,7 +58,6 @@ model Order {
   userId    String
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     OrderItem[]
-  status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
@@ -78,16 +74,4 @@ model OrderItem {
   createdAt DateTime @default(now())
 
   @@map("order_items")
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  CANCELLED
 }

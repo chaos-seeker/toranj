@@ -45,7 +45,7 @@ export const login = publicProcedure
       };
     }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: '7d',
     });
 
@@ -55,13 +55,10 @@ export const login = publicProcedure
       message: 'ورود با موفقیت انجام شد',
       status: 'success' as const,
       user: {
-        _id: user.id,
-        name: user.name,
-        lastName: user.lastName,
-        phone: user.phone,
-        email: user.email,
+        id: user.id,
+        fullName: user.fullName,
+        phoneNumber: user.phone,
         address: user.address,
-        role: user.role,
       },
     };
   });

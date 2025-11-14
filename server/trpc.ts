@@ -17,7 +17,6 @@ export const publicProcedure = t.procedure;
 
 const getUserFromToken = async (): Promise<{
   userId: string;
-  role: 'USER' | 'ADMIN';
 } | null> => {
   try {
     const cookieStore = await cookies();
@@ -26,7 +25,6 @@ const getUserFromToken = async (): Promise<{
 
     const decoded = jwt.verify(token, JWT_SECRET) as {
       userId: string;
-      role: 'USER' | 'ADMIN';
     };
     return decoded;
   } catch {
@@ -49,7 +47,7 @@ export const protectedProcedure = t.procedure.use(async (opts) => {
     ctx: {
       ...opts.ctx,
       userId: user.userId,
-      userRole: user.role,
+      userRole: undefined,
     },
   });
 });
@@ -65,20 +63,12 @@ export const adminProcedure = t.procedure.use(async (opts) => {
       },
     });
   }
-  if (user.role !== 'ADMIN') {
-    return opts.next({
-      ctx: {
-        ...opts.ctx,
-        userId: undefined,
-        userRole: undefined,
-      },
-    });
-  }
+  // Since we don't have role anymore, adminProcedure is same as protectedProcedure
   return opts.next({
     ctx: {
       ...opts.ctx,
       userId: user.userId,
-      userRole: user.role,
+      userRole: undefined,
     },
   });
 });

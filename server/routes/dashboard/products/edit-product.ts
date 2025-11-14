@@ -14,7 +14,7 @@ export const editProduct = adminProcedure
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    const { id, ...updateData } = input;
+    const { id, ...inputData } = input;
 
     const existingProduct = await ctx.prisma.product.findUnique({
       where: { id },
@@ -27,9 +27,9 @@ export const editProduct = adminProcedure
       };
     }
 
-    if (updateData.categoryId) {
+    if (inputData.categoryId) {
       const category = await ctx.prisma.category.findUnique({
-        where: { id: updateData.categoryId },
+        where: { id: inputData.categoryId },
       });
 
       if (!category) {
@@ -40,6 +40,24 @@ export const editProduct = adminProcedure
       }
     }
 
+    const updateData: {
+      title?: string;
+      description?: string;
+      image?: string;
+      priceWithoutDiscount?: number;
+      priceWithDiscount?: number;
+      categoryId?: string;
+    } = {};
+
+    if (inputData.title) updateData.title = inputData.title;
+    if (inputData.description) updateData.description = inputData.description;
+    if (inputData.imagePath) updateData.image = inputData.imagePath;
+    if (inputData.priceWithoutDiscount)
+      updateData.priceWithoutDiscount = inputData.priceWithoutDiscount;
+    if (inputData.priceWithDiscount)
+      updateData.priceWithDiscount = inputData.priceWithDiscount;
+    if (inputData.categoryId) updateData.categoryId = inputData.categoryId;
+
     const product = await ctx.prisma.product.update({
       where: { id },
       data: updateData,
@@ -47,7 +65,7 @@ export const editProduct = adminProcedure
         category: {
           select: {
             id: true,
-            title: true,
+            name: true,
           },
         },
       },
@@ -61,7 +79,7 @@ export const editProduct = adminProcedure
         title: product.title,
         description: product.description,
         image: {
-          path: product.imagePath,
+          path: product.image,
         },
         priceWithoutDiscount: product.priceWithoutDiscount,
         priceWithDiscount: product.priceWithDiscount,

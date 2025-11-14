@@ -28,7 +28,7 @@ export const addProduct = adminProcedure
       data: {
         title: input.title,
         description: input.description,
-        imagePath: input.imagePath,
+        image: input.imagePath,
         priceWithoutDiscount: input.priceWithoutDiscount,
         priceWithDiscount: input.priceWithDiscount,
         categoryId: input.categoryId,
@@ -37,7 +37,7 @@ export const addProduct = adminProcedure
         category: {
           select: {
             id: true,
-            title: true,
+            name: true,
           },
         },
       },
@@ -51,7 +51,7 @@ export const addProduct = adminProcedure
         title: product.title,
         description: product.description,
         image: {
-          path: product.imagePath,
+          path: product.image,
         },
         priceWithoutDiscount: product.priceWithoutDiscount,
         priceWithDiscount: product.priceWithDiscount,

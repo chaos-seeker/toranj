@@ -12,7 +12,7 @@ export const getProductByCategoryId = publicProcedure
         category: {
           select: {
             id: true,
-            title: true,
+            name: true,
           },
         },
       },
@@ -26,7 +26,7 @@ export const getProductByCategoryId = publicProcedure
       title: product.title,
       description: product.description,
       image: {
-        path: product.imagePath,
+        path: product.image,
       },
       priceWithoutDiscount: product.priceWithoutDiscount,
       priceWithDiscount: product.priceWithDiscount,

@@ -20,32 +20,22 @@ const setTokenCookie = async (token: string) => {
 export const register = publicProcedure
   .input(
     z.object({
-      name: z.string().min(1),
-      lastName: z.string().min(1),
-      phone: z.string().min(1),
-      email: z.string().email(),
-      password: z.string().min(6),
-      address: z.string().min(1),
-      confirmPassword: z.string().min(6),
+      fullName: z.string().min(3),
+      phoneNumber: z.string().regex(/^0\d{10}$/),
+      password: z.string().min(8),
+      address: z.string().min(10),
     }),
   )
   .mutation(async ({ input, ctx }) => {
-    if (input.password !== input.confirmPassword) {
-      return {
-        message: 'رمز عبور و تکرار آن مطابقت ندارند',
-        status: 'fail' as const,
-      };
-    }
-
     const existingUser = await ctx.prisma.user.findFirst({
       where: {
-        OR: [{ email: input.email }, { phone: input.phone }],
+        phone: input.phoneNumber,
       },
     });
 
     if (existingUser) {
       return {
-        message: 'کاربری با این ایمیل یا شماره تلفن قبلاً ثبت شده است',
+        message: 'کاربری با این شماره تلفن قبلاً ثبت شده است',
         status: 'fail' as const,
       };
     }
@@ -54,26 +44,20 @@ export const register = publicProcedure
 
     const user = await ctx.prisma.user.create({
       data: {
-        name: input.name,
-        lastName: input.lastName,
-        phone: input.phone,
-        email: input.email,
+        fullName: input.fullName,
+        phone: input.phoneNumber,
         password: hashedPassword,
         address: input.address,
-        role: 'USER',
       },
       select: {
         id: true,
-        name: true,
-        lastName: true,
+        fullName: true,
         phone: true,
-        email: true,
         address: true,
-        role: true,
       },
     });
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: '7d',
     });
 
@@ -82,6 +66,11 @@ export const register = publicProcedure
     return {
       message: 'ثبت‌نام با موفقیت انجام شد',
       status: 'success' as const,
-      user,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        phoneNumber: user.phone,
+        address: user.address,
+      },
     };
   });

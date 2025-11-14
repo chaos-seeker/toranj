@@ -6,7 +6,7 @@ export const getProducts = publicProcedure.query(async ({ ctx }) => {
       category: {
         select: {
           id: true,
-          title: true,
+          name: true,
         },
       },
     },
@@ -20,7 +20,7 @@ export const getProducts = publicProcedure.query(async ({ ctx }) => {
     title: product.title,
     description: product.description,
     image: {
-      path: product.imagePath,
+      path: product.image,
     },
     priceWithoutDiscount: product.priceWithoutDiscount,
     priceWithDiscount: product.priceWithDiscount,

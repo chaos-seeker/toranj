@@ -20,25 +20,11 @@ export function ModalRegister() {
 
   // form
   const formFields = {
-    firstName: {
-      label: 'نام',
+    fullName: {
+      label: 'نام و نام خانوادگی',
       type: 'text',
       errors: {
-        least3characters: 'نام باید حداقل 3 کاراکتر باشد!',
-      },
-    },
-    lastName: {
-      label: 'نام خانوادگی',
-      type: 'text',
-      errors: {
-        least3characters: 'نام خانوادگی باید حداقل 3 کاراکتر باشد!',
-      },
-    },
-    email: {
-      label: 'ایمیل',
-      type: 'email',
-      errors: {
-        isNotCorrect: 'ایمیل وارد شده معتبر نیست!',
+        least3characters: 'نام و نام خانوادگی باید حداقل 3 کاراکتر باشد!',
       },
     },
     phoneNumber: {
@@ -55,64 +41,44 @@ export function ModalRegister() {
         least8characters: 'رمز عبور باید حداقل 8 کاراکتر باشد!',
       },
     },
-    confirmPassword: {
-      label: 'تکرار رمز عبور',
-      type: 'password',
-      errors: {
-        least8characters: 'رمز عبور باید حداقل 8 کاراکتر باشد!',
-      },
-    },
     address: {
       label: 'آدرس',
       type: 'text',
       errors: {
-        least8characters: 'آدرس باید حداقل 10 کاراکتر باشد!',
+        least10characters: 'آدرس باید حداقل 10 کاراکتر باشد!',
       },
     },
   };
   const formSchema = z.object({
-    firstName: z.string().min(3, {
-      message: formFields.firstName.errors.least3characters,
+    fullName: z.string().min(3, {
+      message: formFields.fullName.errors.least3characters,
     }),
-    lastName: z.string().min(3, {
-      message: formFields.lastName.errors.least3characters,
-    }),
-    email: z.string().email(formFields.email.errors.isNotCorrect),
     phoneNumber: z.string().regex(new RegExp(/^0\d{10}$/), {
       message: formFields.phoneNumber.errors.isNotCorrect,
     }),
     password: z.string().min(8, {
       message: formFields.password.errors.least8characters,
     }),
-    confirmPassword: z.string().min(8, {
-      message: formFields.confirmPassword.errors.least8characters,
-    }),
     address: z.string().min(10, {
-      message: formFields.address.errors.least8characters,
+      message: formFields.address.errors.least10characters,
     }),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
+      fullName: '',
       phoneNumber: '',
       password: '',
-      confirmPassword: '',
       address: '',
     },
   });
   const registerMutation = trpc.templates.base.register.useMutation();
   const handleSubmitForm = async () => {
     const res = await registerMutation.mutateAsync({
-      name: form.getValues('firstName'),
-      lastName: form.getValues('lastName'),
-      phone: form.getValues('phoneNumber'),
-      email: form.getValues('email'),
-      address: form.getValues('address'),
+      fullName: form.getValues('fullName'),
+      phoneNumber: form.getValues('phoneNumber'),
       password: form.getValues('password'),
-      confirmPassword: form.getValues('confirmPassword'),
+      address: form.getValues('address'),
     });
     if (res.status === 'success') {
       toast.success(res.message);
@@ -149,7 +115,7 @@ export function ModalRegister() {
           className="flex w-full flex-col p-3"
         >
           {/* fields */}
-          <div className="mb-4 mt-2 grid grid-cols-2 gap-2">
+          <div className="mb-4 mt-2 flex flex-col gap-2">
             {Object.entries(formFields).map(([key, field]) => (
               <Feild name={key} key={key} field={field} form={form} />
             ))}

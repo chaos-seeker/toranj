@@ -12,32 +12,25 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
 
       const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: string;
-        role: 'USER' | 'ADMIN';
       };
 
       const user = await ctx.prisma.user.findUnique({
         where: { id: decoded.userId },
         select: {
           id: true,
-          name: true,
-          lastName: true,
+          fullName: true,
           phone: true,
-          email: true,
           address: true,
-          role: true,
         },
       });
 
       if (!user) return null;
 
       return {
-        _id: user.id,
-        name: user.name,
-        lastName: user.lastName,
-        phone: user.phone,
-        email: user.email,
+        id: user.id,
+        fullName: user.fullName,
+        phoneNumber: user.phone,
         address: user.address,
-        role: user.role,
       };
     } catch {
       return null;

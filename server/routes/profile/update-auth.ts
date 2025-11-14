@@ -4,10 +4,8 @@ import { protectedProcedure } from '@/server/trpc';
 export const updateAuth = protectedProcedure
   .input(
     z.object({
-      name: z.string().min(1).optional(),
-      lastName: z.string().min(1).optional(),
-      phone: z.string().min(1).optional(),
-      email: z.string().email().optional(),
+      fullName: z.string().min(1).optional(),
+      phoneNumber: z.string().min(1).optional(),
       address: z.string().min(1).optional(),
     }),
   )
@@ -20,35 +18,25 @@ export const updateAuth = protectedProcedure
     }
 
     const updateData: {
-      name?: string;
-      lastName?: string;
+      fullName?: string;
       phone?: string;
-      email?: string;
       address?: string;
     } = {};
 
-    if (input.name) updateData.name = input.name;
-    if (input.lastName) updateData.lastName = input.lastName;
-    if (input.phone) updateData.phone = input.phone;
-    if (input.email) updateData.email = input.email;
+    if (input.fullName) updateData.fullName = input.fullName;
+    if (input.phoneNumber) updateData.phone = input.phoneNumber;
     if (input.address) updateData.address = input.address;
 
-    if (input.phone || input.email) {
+    if (input.phoneNumber) {
       const existingUser = await ctx.prisma.user.findFirst({
         where: {
-          AND: [
-            { id: { not: ctx.userId } },
-            {
-              OR: input.phone ? [{ phone: input.phone }] : [],
-              ...(input.email ? [{ email: input.email }] : {}),
-            },
-          ],
+          AND: [{ id: { not: ctx.userId } }, { phone: input.phoneNumber }],
         },
       });
 
       if (existingUser) {
         return {
-          message: 'شماره تلفن یا ایمیل قبلاً استفاده شده است',
+          message: 'شماره تلفن قبلاً استفاده شده است',
           status: 'fail' as const,
         };
       }
@@ -59,12 +47,9 @@ export const updateAuth = protectedProcedure
       data: updateData,
       select: {
         id: true,
-        name: true,
-        lastName: true,
+        fullName: true,
         phone: true,
-        email: true,
         address: true,
-        role: true,
       },
     });
 
@@ -72,13 +57,10 @@ export const updateAuth = protectedProcedure
       message: 'پروفایل با موفقیت به‌روزرسانی شد',
       status: 'success' as const,
       user: {
-        _id: user.id,
-        name: user.name,
-        lastName: user.lastName,
-        phone: user.phone,
-        email: user.email,
+        id: user.id,
+        fullName: user.fullName,
+        phoneNumber: user.phone,
         address: user.address,
-        role: user.role,
       },
     };
   });

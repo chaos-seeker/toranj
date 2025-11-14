@@ -8,10 +8,8 @@ export const getCategories = publicProcedure.query(async ({ ctx }) => {
   });
 
   return categories.map((category: any) => ({
-    _id: category.id,
-    title: category.title,
-    image: {
-      path: category.imagePath,
-    },
+    id: category.id,
+    title: category.name,
+    image: category.image,
   }));
 });
