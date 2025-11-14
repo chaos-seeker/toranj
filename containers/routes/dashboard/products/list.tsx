@@ -11,7 +11,19 @@ import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { formatPrice } from '@/utils/format-price';
 import type { TProduct } from '@/types/product';
 
-export function List() {
+interface IListProps {
+  onEditProduct: (data: {
+    id: string;
+    title: string;
+    description: string;
+    priceWithDiscount: number;
+    priceWithoutDiscount: number;
+    category: string;
+    image: string;
+  }) => void;
+}
+
+export function List({ onEditProduct }: IListProps) {
   const fetchProducts = trpc.routes.global.getProducts.useQuery();
   const deleteProductMutation =
     trpc.routes.dashboard.products.deleteProduct.useMutation({
@@ -20,20 +32,21 @@ export function List() {
       },
     });
   const addProductToggleUrlState = useToggleUrlState('add-product');
+  const editProductToggleUrlState = useToggleUrlState('edit-product');
   const handleShowModalAddProduct = () => {
     addProductToggleUrlState.show();
   };
-  const editProductToggleUrlState = useToggleUrlState('edit-product');
   const handleShowModalEditProduct = (data: any) => {
-    editProductToggleUrlState.show({
+    onEditProduct({
+      id: data.id,
       title: data.title,
       description: data.description,
       priceWithDiscount: data.priceWithDiscount,
       priceWithoutDiscount: data.priceWithoutDiscount,
       category: data.category,
-      id: data.id,
       image: data.image,
     });
+    editProductToggleUrlState.show();
   };
 
   if (fetchProducts.isLoading) {

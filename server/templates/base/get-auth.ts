@@ -86,6 +86,7 @@ export const getAuth = publicProcedure.query(async ({ ctx }) => {
               title: product.category.title,
               image: product.category.image,
             },
+            quantity: item.quantity,
           };
         })
         .filter(Boolean);

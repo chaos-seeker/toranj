@@ -10,7 +10,11 @@ import { Loader } from '@/components/loader';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import type { TCategory } from '@/types/category';
 
-export function List() {
+interface IListProps {
+  onEditCategory: (data: { id: string; title: string; image: string }) => void;
+}
+
+export function List({ onEditCategory }: IListProps) {
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const deleteCategoryMutation =
     trpc.routes.dashboard.categories.deleteCategory.useMutation({
@@ -19,16 +23,17 @@ export function List() {
       },
     });
   const addCategoryToggleUrlState = useToggleUrlState('add-category');
+  const editCategoryToggleUrlState = useToggleUrlState('edit-category');
   const handleShowModalAddCategory = () => {
     addCategoryToggleUrlState.show();
   };
-  const editCategoryToggleUrlState = useToggleUrlState('edit-category');
   const handleShowModalEditCategory = (data: any) => {
-    editCategoryToggleUrlState.show({
-      title: data.title,
+    onEditCategory({
       id: data.id,
-      image: `${process.env.BASE_URL}${data.image}`,
+      title: data.title,
+      image: data.image,
     });
+    editCategoryToggleUrlState.show();
   };
   const handleDeleteCategory = async (id: string) => {
     const res = await deleteCategoryMutation.mutateAsync({ id });

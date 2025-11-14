@@ -8,4 +8,5 @@ export type TProduct = {
   priceWithoutDiscount: number;
   priceWithDiscount: number;
   category: TCategory;
+  quantity: number;
 };

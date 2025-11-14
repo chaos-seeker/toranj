@@ -87,6 +87,7 @@ export const sendCartItems = protectedProcedure
             title: product.category.title,
             image: product.category.image,
           },
+          quantity: item.quantity,
         };
       })
       .filter(Boolean);

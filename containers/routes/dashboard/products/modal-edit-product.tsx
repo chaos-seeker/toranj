@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -14,21 +13,26 @@ import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { fileToBase64 } from '@/utils/file-to-base64';
 import type { TCategory } from '@/types/category';
 
-export function ModalEditProduct() {
+interface IModalEditProductProps {
+  data?: {
+    id: string;
+    title: string;
+    description: string;
+    priceWithDiscount: number;
+    priceWithoutDiscount: number;
+    category: string;
+    image: string;
+  } | null;
+  onClose?: () => void;
+}
+
+export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
   const editProductToggleUrlState = useToggleUrlState('edit-product');
   const utils = trpc.useUtils();
-  const searchParams = useSearchParams();
   const handleClose = () => {
-    editProductToggleUrlState.hide([
-      'title',
-      'description',
-      'id',
-      'category',
-      'priceWithoutDiscount',
-      'priceWithDiscount',
-      'image',
-    ]);
+    editProductToggleUrlState.hide();
     form.reset();
+    onClose?.();
   };
 
   // form
@@ -128,18 +132,19 @@ export function ModalEditProduct() {
       },
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
-  const handleSubmitForm = async (data: any) => {
+  const handleSubmitForm = async (formData: any) => {
+    if (!data?.id) return;
     let imageBase64: string | undefined = undefined;
-    if (data.image[0]) {
-      imageBase64 = await fileToBase64(data.image[0]);
+    if (formData.image[0]) {
+      imageBase64 = await fileToBase64(formData.image[0]);
     }
     const res = await editProductMutation.mutateAsync({
-      id: String(searchParams.get('id')),
-      title: data.title,
-      description: data.description,
-      priceWithoutDiscount: Number(data.priceWithoutDiscount),
-      priceWithDiscount: Number(data.priceWithDiscount),
-      categoryId: data.category,
+      id: data.id,
+      title: formData.title,
+      description: formData.description,
+      priceWithoutDiscount: Number(formData.priceWithoutDiscount),
+      priceWithDiscount: Number(formData.priceWithDiscount),
+      categoryId: formData.category,
       imagePath: imageBase64,
     });
     if (res.status === 'success') {
@@ -159,17 +164,17 @@ export function ModalEditProduct() {
 
   // auto fill form
   useEffect(() => {
-    if (editProductToggleUrlState.isShow) {
+    if (editProductToggleUrlState.isShow && data) {
       form.reset({
         image: null,
-        title: String(searchParams.get('title')),
-        description: String(searchParams.get('description')),
-        priceWithoutDiscount: String(searchParams.get('priceWithoutDiscount')),
-        priceWithDiscount: String(searchParams.get('priceWithDiscount')),
-        category: String(searchParams.get('category')),
+        title: data.title,
+        description: data.description,
+        priceWithoutDiscount: String(data.priceWithoutDiscount),
+        priceWithDiscount: String(data.priceWithDiscount),
+        category: data.category,
       });
     }
-  }, [editProductToggleUrlState.isShow]);
+  }, [editProductToggleUrlState.isShow, data]);
 
   return (
     <ToggleSection

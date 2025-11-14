@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -13,12 +12,21 @@ import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { fileToBase64 } from '@/utils/file-to-base64';
 
-export function ModalEditCategory() {
-  const searchParams = useSearchParams();
+interface IModalEditCategoryProps {
+  data?: {
+    id: string;
+    title: string;
+    image: string;
+  } | null;
+  onClose?: () => void;
+}
+
+export function ModalEditCategory({ data, onClose }: IModalEditCategoryProps) {
   const editCategoryToggleUrlState = useToggleUrlState('edit-category');
   const handleClose = () => {
-    editCategoryToggleUrlState.hide(['title', 'id', 'image']);
+    editCategoryToggleUrlState.hide();
     form.reset();
+    onClose?.();
   };
   const utils = trpc.useUtils();
 
@@ -74,14 +82,15 @@ export function ModalEditCategory() {
         await utils.routes.home.getProductByCategoryId.invalidate();
       },
     });
-  const handleSubmitForm = async (data: any) => {
+  const handleSubmitForm = async (formData: any) => {
+    if (!data?.id) return;
     let imageBase64: string | undefined = undefined;
-    if (data.image[0]) {
-      imageBase64 = await fileToBase64(data.image[0]);
+    if (formData.image[0]) {
+      imageBase64 = await fileToBase64(formData.image[0]);
     }
     const res = await editCategoryMutation.mutateAsync({
-      id: String(searchParams.get('id')),
-      title: data.title,
+      id: data.id,
+      title: formData.title,
       imagePath: imageBase64,
     });
     if (res.status === 'success') {
@@ -95,13 +104,13 @@ export function ModalEditCategory() {
 
   // auto fill form
   useEffect(() => {
-    if (editCategoryToggleUrlState.isShow) {
+    if (editCategoryToggleUrlState.isShow && data) {
       form.reset({
         image: null,
-        title: String(searchParams.get('title')),
+        title: data.title,
       });
     }
-  }, [editCategoryToggleUrlState.isShow]);
+  }, [editCategoryToggleUrlState.isShow, data]);
 
   return (
     <ToggleSection

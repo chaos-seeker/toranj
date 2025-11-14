@@ -75,8 +75,12 @@ export function List() {
                   </td>
                   <td>{formatPrice(product.priceWithDiscount)}</td>
                   <td>{formatPrice(product.priceWithoutDiscount)}</td>
-                  <td>1</td>
-                  <td>{formatPrice(product.priceWithDiscount)}</td>
+                  <td>{product.quantity || 1}</td>
+                  <td>
+                    {formatPrice(
+                      product.priceWithDiscount * (product.quantity || 1),
+                    )}
+                  </td>
                 </tr>
               )),
             )}
