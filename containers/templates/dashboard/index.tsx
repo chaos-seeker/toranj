@@ -1,13 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { Header } from './header';
 
-interface IDashboardProps {
-  children: ReactNode;
-}
-
-export function Dashboard(props: IDashboardProps) {
+export function Dashboard(props: PropsWithChildren) {
   return (
     <div className="flex h-full flex-col lg:flex-row-reverse">
       <Header />

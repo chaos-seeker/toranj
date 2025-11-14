@@ -1,15 +1,11 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import { Base } from './base';
 import { Dashboard } from './dashboard';
 
-interface ITemplateProps {
-  children: ReactNode;
-}
-
-export function Template(props: ITemplateProps) {
+export function Template(props: PropsWithChildren) {
   const pathname = usePathname();
   const isRouteDashboard = pathname.includes('/dashboard');
 

@@ -1,10 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { ReactNode } from 'react';
 import { Template } from '@/containers/templates';
 import { cn } from '@/utils/cn';
 import Providers from './providers';
+import { PropsWithChildren } from 'react';
 
 export const metadata: Metadata = {
   title: 'ترنج',
@@ -12,11 +12,7 @@ export const metadata: Metadata = {
 
 const peyda = localFont({ src: '../public/fonts/peyda.woff2' });
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export default function RootLayout(props: PropsWithChildren) {
   return (
     <html
       suppressHydrationWarning
@@ -26,7 +22,7 @@ export default function RootLayout({
     >
       <body className="flex h-dvh flex-col">
         <Providers>
-          <Template>{children}</Template>
+          <Template>{props.children}</Template>
         </Providers>
       </body>
     </html>
