@@ -55,7 +55,7 @@ const Top = (props: ITopProps) => {
         id="categories-slider"
       >
         {fetchCategories.data?.map((item: TCategory, index: number) => (
-          <SwiperSlide key={item._id} className="!w-fit rounded-lg">
+          <SwiperSlide key={item.id} className="!w-fit rounded-lg">
             <button
               onClick={() => handleActiveCategory(index)}
               className={cn(
@@ -72,7 +72,7 @@ const Top = (props: ITopProps) => {
                 })}
               >
                 <Image
-                  src={`${process.env.BASE_URL}${item.image.path}`}
+                  src={`${process.env.BASE_URL}${item.image}`}
                   alt={item.title}
                   width={50}
                   height={50}
@@ -97,11 +97,11 @@ const Bottom = (props: IBottomProps) => {
     trpc.routes.home.getProductByCategoryId.useQuery(
       {
         categoryId: String(
-          fetchCategories.data?.[props.activedIndex]?._id || '',
+          fetchCategories.data?.[props.activedIndex]?.id || '',
         ),
       },
       {
-        enabled: !!fetchCategories.data?.[props.activedIndex]?._id,
+        enabled: !!fetchCategories.data?.[props.activedIndex]?.id,
       },
     );
 

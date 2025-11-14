@@ -123,7 +123,7 @@ export function ModalAddProduct() {
   if (fetchCategories.isSuccess) {
     formFields.category.data = fetchCategories.data?.map((item: TCategory) => ({
       key: item.title,
-      value: item._id,
+      value: item.id,
     }));
   }
 

@@ -65,7 +65,8 @@ export const editProduct = adminProcedure
         category: {
           select: {
             id: true,
-            name: true,
+            title: true,
+            image: true,
           },
         },
       },
@@ -78,12 +79,14 @@ export const editProduct = adminProcedure
         _id: product.id,
         title: product.title,
         description: product.description,
-        image: {
-          path: product.image,
-        },
+        image: product.image,
         priceWithoutDiscount: product.priceWithoutDiscount,
         priceWithDiscount: product.priceWithDiscount,
-        categoryID: product.categoryId,
+        category: {
+          id: product.category.id,
+          title: product.category.title,
+          image: product.category.image,
+        },
       },
     };
   });

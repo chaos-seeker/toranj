@@ -27,7 +27,7 @@ export function List() {
     editCategoryToggleUrlState.show({
       title: data.title,
       id: data.id,
-      image: `${process.env.BASE_URL}${data.image.path}`,
+      image: `${process.env.BASE_URL}${data.image}`,
     });
   };
   const handleDeleteCategory = async (id: string) => {
@@ -72,11 +72,11 @@ export function List() {
             </thead>
             <tbody>
               {fetchCategories.data?.map((item: TCategory, index: number) => (
-                <tr key={item._id} className="even:bg-gray-50">
+                <tr key={item.id} className="even:bg-gray-50">
                   <td>{index + 1}</td>
                   <td className="text-center">
                     <Image
-                      src={`${process.env.BASE_URL}${item.image.path}`}
+                      src={item.image}
                       alt={item.title}
                       width={50}
                       height={50}
@@ -91,7 +91,7 @@ export function List() {
                         handleShowModalEditCategory({
                           title: item.title,
                           image: item.image,
-                          id: item._id,
+                          id: item.id,
                         })
                       }
                       className="mx-2"
@@ -99,7 +99,7 @@ export function List() {
                       <MdEdit size={22} />
                     </button>
                     <button
-                      onClick={() => handleDeleteCategory(item._id)}
+                      onClick={() => handleDeleteCategory(item.id)}
                       className="mx-2"
                     >
                       <IoMdTrash size={22} />

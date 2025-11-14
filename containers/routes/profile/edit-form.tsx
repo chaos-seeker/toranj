@@ -11,25 +11,11 @@ import { Feild } from '@/components/feild';
 export function EditForm() {
   // form
   const formFields = {
-    firstName: {
-      label: 'نام',
+    fullName: {
+      label: 'نام و نام خانوادگی',
       type: 'text',
       errors: {
-        least3characters: 'نام باید حداقل 3 کاراکتر باشد!',
-      },
-    },
-    lastName: {
-      label: 'نام خانوادگی',
-      type: 'text',
-      errors: {
-        least3characters: 'نام خانوادگی باید حداقل 3 کاراکتر باشد!',
-      },
-    },
-    email: {
-      label: 'ایمیل',
-      type: 'email',
-      errors: {
-        isNotCorrect: 'ایمیل وارد شده معتبر نیست!',
+        least3characters: 'نام و نام خانوادگی باید حداقل 3 کاراکتر باشد!',
       },
     },
     phoneNumber: {
@@ -43,31 +29,25 @@ export function EditForm() {
       label: 'آدرس',
       type: 'text',
       errors: {
-        least8characters: 'آدرس باید حداقل 8 کاراکتر باشد!',
+        least10characters: 'آدرس باید حداقل 10 کاراکتر باشد!',
       },
     },
   };
   const formSchema = z.object({
-    firstName: z.string().min(3, {
-      message: formFields.firstName.errors.least3characters,
+    fullName: z.string().min(3, {
+      message: formFields.fullName.errors.least3characters,
     }),
-    lastName: z.string().min(3, {
-      message: formFields.lastName.errors.least3characters,
-    }),
-    email: z.string().email(formFields.email.errors.isNotCorrect),
     phoneNumber: z.string().regex(new RegExp(/^0\d{10}$/), {
       message: formFields.phoneNumber.errors.isNotCorrect,
     }),
-    address: z.string().min(8, {
-      message: formFields.address.errors.least8characters,
+    address: z.string().min(10, {
+      message: formFields.address.errors.least10characters,
     }),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
+      fullName: '',
       phoneNumber: '',
       address: '',
     },
@@ -76,10 +56,8 @@ export function EditForm() {
   const fetchAuth = trpc.templates.base.getAuth.useQuery();
   const handleSubmitForm = async () => {
     const res = await updateAuthMutation.mutateAsync({
-      name: form.getValues('firstName'),
-      lastName: form.getValues('lastName'),
-      email: form.getValues('email'),
-      phone: form.getValues('phoneNumber'),
+      fullName: form.getValues('fullName'),
+      phoneNumber: form.getValues('phoneNumber'),
       address: form.getValues('address'),
     });
     if (res.status === 'success') {
@@ -92,10 +70,8 @@ export function EditForm() {
   useEffect(() => {
     if (fetchAuth.data) {
       form.reset({
-        firstName: fetchAuth.data.name,
-        lastName: fetchAuth.data.lastName,
-        email: fetchAuth.data.email,
-        phoneNumber: fetchAuth.data.phone,
+        fullName: fetchAuth.data.fullName,
+        phoneNumber: fetchAuth.data.phoneNumber,
         address: fetchAuth.data.address,
       });
     }

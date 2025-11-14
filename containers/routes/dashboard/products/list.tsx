@@ -92,7 +92,7 @@ export function List() {
                     <td>{index + 1}</td>
                     <td className="text-center">
                       <Image
-                        src={`${process.env.BASE_URL}${item.image.path}`}
+                        src={item.image}
                         alt={item.title}
                         width={60}
                         height={60}
@@ -114,9 +114,9 @@ export function List() {
                             description: item.description,
                             priceWithDiscount: item.priceWithDiscount,
                             priceWithoutDiscount: item.priceWithoutDiscount,
-                            category: item.categoryID,
+                            category: item.category.id,
                             id: item._id,
-                            image: `${process.env.BASE_URL}${item.image.path}`,
+                            image: item.image,
                           })
                         }
                         className="mx-2"

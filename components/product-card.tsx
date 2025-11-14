@@ -37,7 +37,7 @@ export function ProductCard({ data }: IProductCardProps) {
   const handleSeeProduct = () =>
     productToggleUrlState.show({
       id: String(data._id),
-      image: `${process.env.BASE_URL}${data.image.path}`,
+      image: data.image,
       title: data.title,
       description: data.description,
       priceWithoutDiscount: String(data.priceWithoutDiscount),
@@ -51,12 +51,7 @@ export function ProductCard({ data }: IProductCardProps) {
     >
       {/* image / title / description */}
       <div className="flex gap-5">
-        <Image
-          src={`${process.env.BASE_URL}${data.image.path}`}
-          alt={data.title}
-          width={100}
-          height={100}
-        />
+        <Image src={data.image} alt={data.title} width={100} height={100} />
         <div className="flex flex-col gap-2">
           <p className="max-w-[150px] truncate text-lg font-bold">
             {data.title}

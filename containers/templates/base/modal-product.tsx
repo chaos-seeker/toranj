@@ -15,15 +15,17 @@ export function ModalProduct() {
   const searchParams = useSearchParams();
   const data = {
     _id: String(searchParams.get('id') ?? ''),
-    image: {
-      path: searchParams.get('image') || '',
-    },
+    image: searchParams.get('image') || '',
     title: searchParams.get('title') || '',
     description: searchParams.get('description') || '',
     discount: Number(searchParams.get('discount')) || 0,
     priceWithoutDiscount: Number(searchParams.get('priceWithoutDiscount')) || 0,
     priceWithDiscount: Number(searchParams.get('priceWithDiscount')) || 0,
-    categoryID: searchParams.get('category') || '',
+    category: {
+      id: searchParams.get('category') || '',
+      title: '',
+      image: '',
+    },
   };
   const localstorageCart = useKillua(cartSlice);
   const handleAddToCart = () => localstorageCart.reducers.add(data);
@@ -64,7 +66,7 @@ export function ModalProduct() {
           <>
             {/* image */}
             <Image
-              src={data.image.path}
+              src={data.image}
               alt={data.title}
               width={130}
               height={130}

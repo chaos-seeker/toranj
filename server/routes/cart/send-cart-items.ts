@@ -21,7 +21,7 @@ export const sendCartItems = protectedProcedure
     }
 
     const productIds = input.items.map((item) => item.productID);
-    const products = await ctx.prisma.product.findMany({
+    const existingProducts = await ctx.prisma.product.findMany({
       where: {
         id: {
           in: productIds,
@@ -29,38 +29,25 @@ export const sendCartItems = protectedProcedure
       },
     });
 
-    if (products.length !== productIds.length) {
+    if (existingProducts.length !== productIds.length) {
       return {
         message: 'یک یا چند محصول یافت نشد',
         status: 'fail' as const,
       };
     }
 
+    // Store products as JSON: [{ productId: string, quantity: number }]
+    const productsData = input.items.map((item) => ({
+      productId: item.productID,
+      quantity: item.quantity,
+    }));
+
     const order = await ctx.prisma.order.create({
       data: {
         userId: ctx.userId!,
-        items: {
-          create: input.items.map((item) => ({
-            productId: item.productID,
-            quantity: item.quantity,
-          })),
-        },
+        products: productsData as any,
       },
       include: {
-        items: {
-          include: {
-            product: {
-              include: {
-                category: {
-                  select: {
-                    id: true,
-                    name: true,
-                  },
-                },
-              },
-            },
-          },
-        },
         user: {
           select: {
             id: true,
@@ -72,25 +59,51 @@ export const sendCartItems = protectedProcedure
       },
     });
 
+    // Fetch products to return full product data
+    const allProducts = await ctx.prisma.product.findMany({
+      where: {
+        id: {
+          in: productIds,
+        },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            title: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    const productsMap = new Map(allProducts.map((p: any) => [p.id, p]));
+    const orderProducts = (order.products as any[])
+      .map((item: any) => {
+        const product = productsMap.get(item.productId) as any;
+        if (!product) return null;
+        return {
+          _id: product.id,
+          title: product.title,
+          description: product.description,
+          image: product.image,
+          priceWithoutDiscount: product.priceWithoutDiscount,
+          priceWithDiscount: product.priceWithDiscount,
+          category: {
+            id: product.category.id,
+            title: product.category.title,
+            image: product.category.image,
+          },
+        };
+      })
+      .filter(Boolean);
+
     return {
       message: 'سفارش با موفقیت ایجاد شد',
       status: 'success' as const,
       order: {
         id: order.id,
-        products: order.items.map((item: any) => ({
-          productID: {
-            _id: item.product.id,
-            title: item.product.title,
-            description: item.product.description,
-            image: {
-              path: item.product.image,
-            },
-            priceWithoutDiscount: item.product.priceWithoutDiscount,
-            priceWithDiscount: item.product.priceWithDiscount,
-            categoryID: item.product.categoryId,
-          },
-          quantity: item.quantity,
-        })),
+        products: orderProducts,
         user: {
           id: order.user.id,
           fullName: order.user.fullName,

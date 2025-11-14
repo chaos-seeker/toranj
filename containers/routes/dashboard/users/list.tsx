@@ -5,7 +5,6 @@ import { IoMdTrash } from 'react-icons/io';
 import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
-import { cn } from '@/utils/cn';
 import type { TUser } from '@/types/user';
 
 export function List() {
@@ -17,12 +16,6 @@ export function List() {
       },
     },
   );
-  const changeUserRoleMutation =
-    trpc.routes.dashboard.users.changeUserRole.useMutation({
-      onSuccess: () => {
-        fetchUsers.refetch();
-      },
-    });
 
   if (fetchUsers.isLoading) {
     return <Loader />;
@@ -41,18 +34,6 @@ export function List() {
     }
   };
 
-  const handleChangeUserRole = async (params: { id: string; role: string }) => {
-    const res = await changeUserRoleMutation.mutateAsync({
-      id: params.id,
-      role: params.role.toUpperCase() as 'USER' | 'ADMIN',
-    });
-    if (res.status === 'success') {
-      toast.success(res.message);
-    } else {
-      toast.error(res.message);
-    }
-  };
-
   return (
     <section className="size-full overflow-hidden">
       <div className="overflow-x-auto rounded-xl border border-teal/20">
@@ -63,67 +44,26 @@ export function List() {
                 <p>#</p>
               </th>
               <th>
-                <p>نام</p>
-              </th>
-              <th>
-                <p>نام خانوادگی</p>
+                <p>نام و نام خانوادگی</p>
               </th>
               <th>
                 <p>شماره موبایل</p>
               </th>
               <th>
-                <p>ایمیل</p>
-              </th>
-              <th>
                 <p>آدرس</p>
-              </th>
-              <th>
-                <p>سطح دسترسی</p>
               </th>
               <th />
             </tr>
           </thead>
           <tbody>
             {fetchUsers.data?.map((item: TUser, index: number) => (
-              <tr key={item._id} className="odd:bg-gray-50">
+              <tr key={item.id} className="odd:bg-gray-50">
                 <td>{index + 1}</td>
-                <td>{item.name}</td>
-                <td>{item.lastName}</td>
-                <td>{item.phone}</td>
-                <td>{item.email}</td>
+                <td>{item.fullName}</td>
+                <td>{item.phoneNumber}</td>
                 <td>{item.address}</td>
-                <td className="m-2 flex w-fit gap-2 rounded-md border border-teal !p-1">
-                  <button
-                    className={cn({
-                      'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
-                        item.role.toLocaleLowerCase() === 'user',
-                    })}
-                    onClick={() =>
-                      handleChangeUserRole({
-                        id: item._id,
-                        role: 'user',
-                      })
-                    }
-                  >
-                    user
-                  </button>
-                  <button
-                    className={cn({
-                      'bg-teal text-white px-2 pointer-events-none py-1 rounded-md':
-                        item.role.toLocaleLowerCase() === 'admin',
-                    })}
-                    onClick={() =>
-                      handleChangeUserRole({
-                        id: item._id,
-                        role: 'admin',
-                      })
-                    }
-                  >
-                    admin
-                  </button>
-                </td>
                 <td className="text-right">
-                  <button onClick={() => handleDeleteUser(item._id)}>
+                  <button onClick={() => handleDeleteUser(item.id)}>
                     <IoMdTrash size={22} />
                   </button>
                 </td>

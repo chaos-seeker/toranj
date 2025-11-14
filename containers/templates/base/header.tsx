@@ -7,7 +7,6 @@ import { FaHeart, FaHome, FaShoppingCart } from 'react-icons/fa';
 import { IoFastFood } from 'react-icons/io5';
 import { LuLogOut } from 'react-icons/lu';
 import { PiShoppingBagOpenFill } from 'react-icons/pi';
-import { TbLayoutDashboardFilled } from 'react-icons/tb';
 import { trpc } from '@/lib/trpc';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cn } from '@/utils/cn';
@@ -54,7 +53,6 @@ export function Header() {
     toast.success('با موفقیت خارج شدید');
     setTimeout(() => window.location.reload(), 3000);
   };
-  const isAdmin = fetchAuth.data?.role === 'ADMIN';
 
   return (
     <header className="container">
@@ -88,20 +86,11 @@ export function Header() {
         {/* login / profile || fullname / logout */}
         {fetchAuth.data ? (
           <div className="flex items-center gap-3">
-            {Boolean(isAdmin) && (
-              <Link
-                href="/dashboard"
-                className="relative hidden items-center gap-2 rounded-lg border border-yellow p-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal lg:flex"
-              >
-                <p className="whitespace-nowrap text-smp">پنل ادمین</p>
-                <TbLayoutDashboardFilled size={25} />
-              </Link>
-            )}
             <Link
               href="/profile"
               className="max-w-32 truncate rounded-lg bg-green p-2.5 font-medium text-teal"
             >
-              {fetchAuth.data.name} {fetchAuth.data.lastName}
+              {fetchAuth.data.fullName}
             </Link>
             <button onClick={handleLogout}>
               <div className="relative flex items-center gap-2 rounded-lg border border-yellow p-2 text-sm text-yellow transition-all hover:bg-yellow hover:text-teal">

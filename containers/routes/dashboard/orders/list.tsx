@@ -5,6 +5,7 @@ import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
 import type { TOrder } from '@/types/order';
+import type { TProduct } from '@/types/product';
 
 export function List() {
   const fetchClientOrders =
@@ -28,10 +29,10 @@ export function List() {
                 <p>#</p>
               </th>
               <th>
-                <p>نام</p>
-              </th>{' '}
+                <p>نام و نام خانوادگی</p>
+              </th>
               <th>
-                <p>نام خانوادگی</p>
+                <p>شماره موبایل</p>
               </th>
               <th>
                 <p>آدرس</p>
@@ -55,34 +56,24 @@ export function List() {
           </thead>
           <tbody>
             {fetchClientOrders.data?.map(
-              (itemOrder: TOrder, index: number) =>
-                itemOrder.products.map((itemProduct) => (
+              (itemOrder: TOrder, orderIndex: number) =>
+                itemOrder.products.map(
+                  (itemProduct: TProduct, productIndex: number) => (
                     <tr
-                      key={itemProduct.productID._id}
+                      key={`${itemOrder.id}-${itemProduct._id}-${productIndex}`}
                       className="even:bg-gray-50"
                     >
-                      <td>{index + 1}</td>
-                      <td>{itemOrder.userID.name}</td>
-                      <td>{itemOrder.userID.lastName}</td>
-                      <td>{itemOrder.userID.address}</td>
+                      <td>{orderIndex + 1}</td>
+                      <td>{itemOrder.user.fullName}</td>
+                      <td>{itemOrder.user.phoneNumber}</td>
+                      <td>{itemOrder.user.address}</td>
                       <td className="max-w-[150px] truncate text-right">
-                        {itemProduct.productID.title}
+                        {itemProduct.title}
                       </td>
-                      <td>
-                        {formatPrice(itemProduct.productID.priceWithDiscount)}
-                      </td>
-                      <td>
-                        {formatPrice(
-                          itemProduct.productID.priceWithoutDiscount,
-                        )}
-                      </td>
-                      <td>{itemProduct.quantity}</td>
-                      <td>
-                        {formatPrice(
-                          Number(itemProduct.productID.priceWithDiscount) *
-                            itemProduct.quantity,
-                        )}
-                      </td>
+                      <td>{formatPrice(itemProduct.priceWithDiscount)}</td>
+                      <td>{formatPrice(itemProduct.priceWithoutDiscount)}</td>
+                      <td>1</td>
+                      <td>{formatPrice(itemProduct.priceWithDiscount)}</td>
                     </tr>
                   ),
                 ),

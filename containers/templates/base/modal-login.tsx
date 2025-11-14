@@ -47,7 +47,7 @@ export function ModalLogin() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       phoneNumber: '09000000000',
-      password: 'aaaaaaaa',
+      password: '12345678',
     },
   });
   const loginMutation = trpc.templates.base.login.useMutation();

@@ -5,6 +5,8 @@ import { trpc } from '@/lib/trpc';
 import { Empty } from '@/components/empty';
 import { Loader } from '@/components/loader';
 import { formatPrice } from '@/utils/format-price';
+import type { TOrder } from '@/types/order';
+import type { TProduct } from '@/types/product';
 
 export function List() {
   const fetchClientOrders = trpc.routes.orders.getClientOrders.useQuery();
@@ -50,32 +52,31 @@ export function List() {
             </tr>
           </thead>
           <tbody>
-            {fetchClientOrders.data?.map((item, index) =>
-              item.products.map((item) => (
-                <tr key={item.productID._id} className="even:bg-gray-50">
-                  <td>{index + 1}</td>
+            {fetchClientOrders.data?.map((order: TOrder, orderIndex: number) =>
+              order.products.map((product: TProduct, productIndex: number) => (
+                <tr
+                  key={`${order.id}-${product._id}-${productIndex}`}
+                  className="even:bg-gray-50"
+                >
+                  <td>{orderIndex + 1}</td>
                   <td className="text-center">
-                    <Image
-                      src={`${process.env.BASE_URL}${item.productID.image.path}`}
-                      alt={item.productID.title}
+                      <Image
+                        src={product.image}
+                      alt={product.title}
                       width={50}
                       height={50}
                     />
                   </td>
                   <td className="max-w-[150px] truncate  text-right">
-                    {item.productID.title}
+                    {product.title}
                   </td>
                   <td className="max-w-[150px] truncate  text-right">
-                    {item.productID.description}
+                    {product.description}
                   </td>
-                  <td>{formatPrice(item.productID.priceWithDiscount)}</td>
-                  <td>{formatPrice(item.productID.priceWithoutDiscount)}</td>
-                  <td>{item.quantity}</td>
-                  <td>
-                    {formatPrice(
-                      Number(item.productID.priceWithDiscount) * item.quantity,
-                    )}
-                  </td>
+                  <td>{formatPrice(product.priceWithDiscount)}</td>
+                  <td>{formatPrice(product.priceWithoutDiscount)}</td>
+                  <td>1</td>
+                  <td>{formatPrice(product.priceWithDiscount)}</td>
                 </tr>
               )),
             )}
