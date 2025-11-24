@@ -27,8 +27,16 @@ export function List({ onEditProduct }: IListProps) {
   const fetchProducts = trpc.routes.global.getProducts.useQuery();
   const deleteProductMutation =
     trpc.routes.dashboard.products.deleteProduct.useMutation({
-      onSuccess: () => {
+      onSuccess: (res) => {
         fetchProducts.refetch();
+        if (res.status === 'success') {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const addProductToggleUrlState = useToggleUrlState('add-product');
@@ -53,13 +61,8 @@ export function List({ onEditProduct }: IListProps) {
     return <Loader />;
   }
 
-  const handleDeleteProduct = async (id: string) => {
-    const res = await deleteProductMutation.mutateAsync({ id });
-    if (res.status === 'success') {
-      toast.success(res.message);
-    } else {
-      toast.error(res.message);
-    }
+  const handleDeleteProduct = (id: string) => {
+    deleteProductMutation.mutate({ id });
   };
 
   return (

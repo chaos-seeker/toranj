@@ -64,10 +64,20 @@ export function ModalAddCategory() {
   });
   const addCategoryMutation =
     trpc.routes.dashboard.categories.addCategory.useMutation({
-      onSuccess: async () => {
+      onSuccess: async (res) => {
         await utils.routes.global.getCategories.invalidate();
         await utils.routes.global.getProducts.invalidate();
         await utils.routes.home.getProductByCategoryId.invalidate();
+        if (res.status === 'success') {
+          toast.success(res.message);
+          form.reset();
+          handleClose();
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const handleSubmitForm = async (data: any) => {
@@ -75,17 +85,10 @@ export function ModalAddCategory() {
     if (data.image[0]) {
       imageBase64 = await fileToBase64(data.image[0]);
     }
-    const res = await addCategoryMutation.mutateAsync({
+    addCategoryMutation.mutate({
       title: data.title,
       imagePath: imageBase64,
     });
-    if (res.status === 'success') {
-      toast.success(res.message);
-      form.reset();
-      handleClose();
-    } else {
-      toast.error(res.message);
-    }
   };
 
   return (

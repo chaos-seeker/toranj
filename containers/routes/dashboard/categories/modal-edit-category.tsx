@@ -75,10 +75,20 @@ export function ModalEditCategory({ data, onClose }: IModalEditCategoryProps) {
   });
   const editCategoryMutation =
     trpc.routes.dashboard.categories.editCategory.useMutation({
-      onSuccess: async () => {
+      onSuccess: async (res) => {
         await utils.routes.global.getCategories.invalidate();
         await utils.routes.global.getProducts.invalidate();
         await utils.routes.home.getProductByCategoryId.invalidate();
+        if (res.status === 'success') {
+          toast.success(res.message);
+          form.reset();
+          handleClose();
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const handleSubmitForm = async (formData: any) => {
@@ -87,18 +97,11 @@ export function ModalEditCategory({ data, onClose }: IModalEditCategoryProps) {
     if (formData.image[0]) {
       imageBase64 = await fileToBase64(formData.image[0]);
     }
-    const res = await editCategoryMutation.mutateAsync({
+    editCategoryMutation.mutate({
       id: data.id,
       title: formData.title,
       imagePath: imageBase64,
     });
-    if (res.status === 'success') {
-      toast.success(res.message);
-      form.reset();
-      handleClose();
-    } else {
-      toast.error(res.message);
-    }
   };
 
   useEffect(() => {

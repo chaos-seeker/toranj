@@ -11,8 +11,16 @@ export function List() {
   const fetchUsers = trpc.routes.dashboard.users.getUsers.useQuery();
   const deleteUserMutation = trpc.routes.dashboard.users.deleteUser.useMutation(
     {
-      onSuccess: () => {
+      onSuccess: (res) => {
         fetchUsers.refetch();
+        if (res.status === 'success') {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     },
   );
@@ -25,13 +33,8 @@ export function List() {
     return <Empty text="کاربری وجود ندارد" />;
   }
 
-  const handleDeleteUser = async (id: string) => {
-    const res = await deleteUserMutation.mutateAsync({ id });
-    if (res.status === 'success') {
-      toast.success(res.message);
-    } else {
-      toast.error(res.message);
-    }
+  const handleDeleteUser = (id: string) => {
+    deleteUserMutation.mutate({ id });
   };
 
   return (

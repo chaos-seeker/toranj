@@ -125,9 +125,19 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
   });
   const editProductMutation =
     trpc.routes.dashboard.products.editProduct.useMutation({
-      onSuccess: async () => {
+      onSuccess: async (res) => {
         await utils.routes.global.getProducts.invalidate();
         await utils.routes.home.getProductByCategoryId.invalidate();
+        if (res.status === 'success') {
+          toast.success(res.message);
+          handleClose();
+          form.reset();
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
@@ -137,7 +147,7 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
     if (formData.image[0]) {
       imageBase64 = await fileToBase64(formData.image[0]);
     }
-    const res = await editProductMutation.mutateAsync({
+    editProductMutation.mutate({
       id: data.id,
       title: formData.title,
       description: formData.description,
@@ -146,13 +156,6 @@ export function ModalEditProduct({ data, onClose }: IModalEditProductProps) {
       categoryId: formData.category,
       imagePath: imageBase64,
     });
-    if (res.status === 'success') {
-      toast.success(res.message);
-      handleClose();
-      form.reset();
-    } else {
-      toast.error(res.message);
-    }
   };
   if (fetchCategories.isSuccess) {
     formFields.category.data = fetchCategories.data?.map((item: TCategory) => ({

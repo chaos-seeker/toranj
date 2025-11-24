@@ -18,8 +18,16 @@ export function List({ onEditCategory }: IListProps) {
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
   const deleteCategoryMutation =
     trpc.routes.dashboard.categories.deleteCategory.useMutation({
-      onSuccess: () => {
+      onSuccess: (res) => {
         fetchCategories.refetch();
+        if (res.status === 'success') {
+          toast.success(res.message);
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const addCategoryToggleUrlState = useToggleUrlState('add-category');
@@ -35,13 +43,8 @@ export function List({ onEditCategory }: IListProps) {
     });
     editCategoryToggleUrlState.show();
   };
-  const handleDeleteCategory = async (id: string) => {
-    const res = await deleteCategoryMutation.mutateAsync({ id });
-    if (res.status === 'success') {
-      toast.success(res.message);
-    } else {
-      toast.error(res.message);
-    }
+  const handleDeleteCategory = (id: string) => {
+    deleteCategoryMutation.mutate({ id });
   };
 
   if (fetchCategories.isLoading || deleteCategoryMutation.isPending) {

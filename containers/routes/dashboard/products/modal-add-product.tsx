@@ -110,9 +110,19 @@ export function ModalAddProduct() {
   });
   const addProductMutation =
     trpc.routes.dashboard.products.addProduct.useMutation({
-      onSuccess: async () => {
+      onSuccess: async (res) => {
         await utils.routes.global.getProducts.invalidate();
         await utils.routes.home.getProductByCategoryId.invalidate();
+        if (res.status === 'success') {
+          toast.success(res.message);
+          form.reset();
+          handleClose();
+        } else {
+          toast.error(res.message);
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     });
   const fetchCategories = trpc.routes.global.getCategories.useQuery();
@@ -121,7 +131,7 @@ export function ModalAddProduct() {
     if (data.image[0]) {
       imageBase64 = await fileToBase64(data.image[0]);
     }
-    const res = await addProductMutation.mutateAsync({
+    addProductMutation.mutate({
       title: data.title,
       description: data.description,
       priceWithoutDiscount: Number(data.priceWithoutDiscount),
@@ -129,13 +139,6 @@ export function ModalAddProduct() {
       categoryId: data.category,
       imagePath: imageBase64,
     });
-    if (res.status === 'success') {
-      toast.success(res.message);
-      form.reset();
-      handleClose();
-    } else {
-      toast.error(res.message);
-    }
   };
   if (fetchCategories.isSuccess) {
     formFields.category.data = fetchCategories.data?.map((item: TCategory) => ({
