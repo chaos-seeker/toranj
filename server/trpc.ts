@@ -59,3 +59,14 @@ export const adminProcedure = t.procedure.use(async (opts) => {
     },
   });
 });
+
+export const developmentOnlyProcedure = t.procedure.use(({ next }) => {
+  if (process.env.NODE_ENV !== 'development') {
+    throw new TRPCError({
+      code: 'FORBIDDEN',
+      message: 'دسترسی محدود شده!',
+    });
+  }
+
+  return next();
+});

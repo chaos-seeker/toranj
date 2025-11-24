@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { publicProcedure } from '@/server/trpc';
+import { developmentOnlyProcedure } from '@/server/trpc';
 
-export const deleteProduct = publicProcedure
+export const deleteProduct = developmentOnlyProcedure
   .input(z.object({ id: z.string().min(1) }))
   .mutation(async ({ input, ctx }) => {
     const product = await ctx.prisma.product.findUnique({

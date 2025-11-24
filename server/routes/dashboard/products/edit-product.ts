@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { publicProcedure } from '@/server/trpc';
+import { developmentOnlyProcedure } from '@/server/trpc';
 
-export const editProduct = publicProcedure
+export const editProduct = developmentOnlyProcedure
   .input(
     z.object({
       id: z.string().min(1),

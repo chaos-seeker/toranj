@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { publicProcedure } from '@/server/trpc';
+import { developmentOnlyProcedure } from '@/server/trpc';
 
-export const deleteCategory = publicProcedure
+export const deleteCategory = developmentOnlyProcedure
   .input(z.object({ id: z.string().min(1) }))
   .mutation(async ({ input, ctx }) => {
     const category = await ctx.prisma.category.findUnique({
